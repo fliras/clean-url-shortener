@@ -20,7 +20,6 @@ export default class AddShortUrlController {
         validityInDays,
       });
     } catch (error) {
-      console.log(error);
       return serverError();
     }
   }
