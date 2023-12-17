@@ -2,6 +2,7 @@ import AddShortUrlController from '../../../src/presentation/controllers/add-sho
 import {
   badRequest,
   serverError,
+  ok,
 } from '../../../src/presentation/helpers/http.js';
 
 class GenerateShortUrlCodeUsecaseStub {
@@ -11,13 +12,15 @@ class GenerateShortUrlCodeUsecaseStub {
 }
 
 class AddShortUrlUsecaseStub {
+  result = {
+    id: 1,
+    fullUrl: 'full-url',
+    shortCode: 'short-code',
+    expirationDate: new Date(),
+  };
+
   async handle() {
-    return {
-      id: 1,
-      fullUrl: 'full-url',
-      shortCode: 'short-code',
-      expirationDate: new Date(),
-    };
+    return this.result;
   }
 }
 
@@ -88,5 +91,11 @@ describe('AddShortUrlController', () => {
     });
     const response = await sut.handle(mockRequest());
     expect(response).toEqual(serverError());
+  });
+
+  it('Should return ok on success', async () => {
+    const { sut, addShortUrlUsecase } = makeSut();
+    const response = await sut.handle(mockRequest());
+    expect(response).toEqual(ok(addShortUrlUsecase.result));
   });
 });
