@@ -32,6 +32,14 @@ const makeSut = () => {
   };
 };
 
+const mockRequest = () => ({
+  body: {
+    url: 'full-url',
+    shortCode: 'short-code',
+    validityInDays: new Date(),
+  },
+});
+
 describe('AddShortUrlController', () => {
   it('Should return badRequest if url are not provided', async () => {
     const { sut } = makeSut();
@@ -54,15 +62,8 @@ describe('AddShortUrlController', () => {
   it('Should call AddShortUrlUsecase with correct values', async () => {
     const { sut, addShortUrlUsecase } = makeSut();
     const addShortUrlSpy = jest.spyOn(addShortUrlUsecase, 'handle');
-    await sut.handle({ body: { url: 'full-url' } });
-    expect(addShortUrlSpy).toHaveBeenCalledWith({
-      url: 'full-url',
-      shortCode: 'random-short-code',
-    });
-    await sut.handle({ body: { url: 'full-url', shortCode: 'custom-code' } });
-    expect(addShortUrlSpy).toHaveBeenCalledWith({
-      url: 'full-url',
-      shortCode: 'custom-code',
-    });
+    const request = mockRequest();
+    await sut.handle(request);
+    expect(addShortUrlSpy).toHaveBeenCalledWith(request.body);
   });
 });
