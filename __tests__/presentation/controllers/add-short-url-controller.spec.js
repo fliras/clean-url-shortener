@@ -1,5 +1,8 @@
 import AddShortUrlController from '../../../src/presentation/controllers/add-short-url-controller.js';
-import { badRequest } from '../../../src/presentation/helpers/http.js';
+import {
+  badRequest,
+  serverError,
+} from '../../../src/presentation/helpers/http.js';
 
 class GenerateShortUrlCodeUsecaseStub {
   async handle() {
@@ -57,6 +60,17 @@ describe('AddShortUrlController', () => {
     );
     await sut.handle({ body: { url: 'full-url' } });
     expect(generateShortUrlCodeSpy).toHaveBeenCalled();
+  });
+
+  it('Should return serverError if GenerateShortUrlCodeUsecase throws', async () => {
+    const { sut, generateShortUrlCodeUsecase } = makeSut();
+    jest
+      .spyOn(generateShortUrlCodeUsecase, 'handle')
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
+    const response = await sut.handle({ body: { url: 'full-url' } });
+    expect(response).toEqual(serverError());
   });
 
   it('Should call AddShortUrlUsecase with correct values', async () => {
