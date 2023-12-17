@@ -12,6 +12,7 @@ export default class AddShortUrlController {
   async handle({ body: { url, shortCode, validityInDays } }) {
     try {
       if (!url) return badRequest(new Error('required fields not informed'));
+      if (!shortCode) await this.#generateShortUrlCodeUsecase.handle();
     } catch (error) {
       console.log(error);
       return serverError();
