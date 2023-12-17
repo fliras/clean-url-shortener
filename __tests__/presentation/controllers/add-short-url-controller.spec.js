@@ -50,4 +50,19 @@ describe('AddShortUrlController', () => {
     await sut.handle({ body: { url: 'full-url' } });
     expect(generateShortUrlCodeSpy).toHaveBeenCalled();
   });
+
+  it('Should call AddShortUrlUsecase with correct values', async () => {
+    const { sut, addShortUrlUsecase } = makeSut();
+    const addShortUrlSpy = jest.spyOn(addShortUrlUsecase, 'handle');
+    await sut.handle({ body: { url: 'full-url' } });
+    expect(addShortUrlSpy).toHaveBeenCalledWith({
+      url: 'full-url',
+      shortCode: 'random-short-code',
+    });
+    await sut.handle({ body: { url: 'full-url', shortCode: 'custom-code' } });
+    expect(addShortUrlSpy).toHaveBeenCalledWith({
+      url: 'full-url',
+      shortCode: 'custom-code',
+    });
+  });
 });
