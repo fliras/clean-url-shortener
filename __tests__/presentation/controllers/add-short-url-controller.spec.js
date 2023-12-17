@@ -40,4 +40,14 @@ describe('AddShortUrlController', () => {
       badRequest(new Error('required fields not informed')),
     );
   });
+
+  it('Should call GenerateShortUrlCodeUsecase if shortCode is not provided', async () => {
+    const { sut, generateShortUrlCodeUsecase } = makeSut();
+    const generateShortUrlCodeSpy = jest.spyOn(
+      generateShortUrlCodeUsecase,
+      'handle',
+    );
+    await sut.handle({ body: { url: 'full-url' } });
+    expect(generateShortUrlCodeSpy).toHaveBeenCalled();
+  });
 });
