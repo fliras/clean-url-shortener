@@ -1,9 +1,5 @@
-import AddShortUrlController from '../../../src/presentation/controllers/add-short-url-controller.js';
-import {
-  badRequest,
-  serverError,
-  ok,
-} from '../../../src/presentation/helpers/http.js';
+import AddShortUrlController from '@/presentation/controllers/add-short-url-controller.js';
+import { badRequest, serverError, ok } from '@/presentation/helpers/http.js';
 
 class GenerateShortUrlCodeUsecaseStub {
   async handle() {
