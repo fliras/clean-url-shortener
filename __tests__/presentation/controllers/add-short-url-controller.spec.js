@@ -80,4 +80,13 @@ describe('AddShortUrlController', () => {
     await sut.handle(request);
     expect(addShortUrlSpy).toHaveBeenCalledWith(request.body);
   });
+
+  it('Should return serverError if AddShortUrlUsecase throws', async () => {
+    const { sut, addShortUrlUsecase } = makeSut();
+    jest.spyOn(addShortUrlUsecase, 'handle').mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const response = await sut.handle(mockRequest());
+    expect(response).toEqual(serverError());
+  });
 });
