@@ -26,5 +26,11 @@ describe('TimestampOperations', () => {
       const output = sut.addDays(daysToAdd);
       expect(output).toBeInstanceOf(Date);
     });
+
+    it('Should return a timestamp added to the provided number of days (without a given timestamp)', () => {
+      const { daysToAdd, sut } = makeSut();
+      const output = sut.addDays(daysToAdd);
+      expect(output).toEqual(new Date('2001-01-06'));
+    });
   });
 });
