@@ -17,9 +17,13 @@ export default class AddShortUrlUsecase {
     const shortCodeAlreadyInUse =
       await this.#checkShortUrlByCodeRepository.checkByCode(shortCode);
     if (shortCodeAlreadyInUse) return new Error('Code already in use');
-    if (validityInDays) this.#timestampAdder.addDays(validityInDays);
     const expirationDate =
       validityInDays && this.#timestampAdder.addDays(validityInDays);
-    this.#addShortUrlRepository.add({ url, shortCode, expirationDate });
+    const shortUrl = await this.#addShortUrlRepository.add({
+      url,
+      shortCode,
+      expirationDate,
+    });
+    return shortUrl;
   }
 }

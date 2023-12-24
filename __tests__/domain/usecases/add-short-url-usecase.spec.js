@@ -15,7 +15,16 @@ class TimestampAdderStub {
 }
 
 class AddShortUrlRepositoryStub {
-  async add() {}
+  createdShortUrl = {
+    id: 1,
+    fullUrl: 'full-url',
+    shortCode: 'short-code',
+    expirationDate: new Date('2021-01-15'),
+  };
+
+  async add() {
+    return this.createdShortUrl;
+  }
 }
 
 const mockRequest = () => ({
@@ -122,11 +131,11 @@ describe('AddShortUrlUsecase', () => {
     const output = sut.handle(mockRequest());
     expect(output).rejects.toThrow();
   });
-});
 
-/*
-deve receber os parâmetros,
-checar se já não existe uma url com o código cadastrado
-se a validade for informada, gerar a data de expiração
-cadastrar a url e retornar as suas informações
-*/
+  it('Should return the created ShortUrl on success', async () => {
+    const { addShortUrlRepository, sut } = makeSut();
+    const request = mockRequest();
+    const output = await sut.handle(request);
+    expect(output).toBe(addShortUrlRepository.createdShortUrl);
+  });
+});
