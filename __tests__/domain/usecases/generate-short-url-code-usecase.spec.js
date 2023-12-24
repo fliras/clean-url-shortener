@@ -2,9 +2,11 @@ import GenerateShortUrlCodeUsecase from '@/domain/usecases/generate-short-url-co
 import UniqueCodeGenerator from '@/infra/cripto/unique-code-generator.js';
 
 const makeSut = () => {
+  const shortCodeLength = 13;
   const uniqueCodeGenerator = new UniqueCodeGenerator();
   const sut = new GenerateShortUrlCodeUsecase({ uniqueCodeGenerator });
   return {
+    shortCodeLength,
     uniqueCodeGenerator,
     sut,
   };
@@ -12,15 +14,13 @@ const makeSut = () => {
 
 describe('GenerateShortUrlCodeUsecase', () => {
   it('Should return a shortCode according to the specified length', async () => {
-    const shortCodeLength = 13;
-    const { sut } = makeSut();
+    const { sut, shortCodeLength } = makeSut();
     const response = await sut.handle(shortCodeLength);
     expect(response.length).toBe(shortCodeLength);
   });
 
   it('Should throw if UniqueCodeGenerator throws', async () => {
-    const { sut, uniqueCodeGenerator } = makeSut();
-    const shortCodeLength = 13;
+    const { sut, shortCodeLength, uniqueCodeGenerator } = makeSut();
     jest.spyOn(uniqueCodeGenerator, 'generate').mockImplementationOnce(() => {
       throw new Error();
     });
