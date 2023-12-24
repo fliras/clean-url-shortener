@@ -1,15 +1,23 @@
 import AddShortUrlUsecase from '@/domain/usecases/add-short-url-usecase.js';
 
 class CheckShortUrlByCodeRepositoryStub {
-  async checkByCode(code) {
+  async checkByCode() {
     return false;
   }
 }
 
+const mockRequest = () => ({
+  url: 'full-url',
+  shortCode: 'short-code',
+  validityInDays: 5,
+});
+
 const makeSut = () => {
+  const codeAlreadyInUseError = new Error('Code already in use');
   const checkShortUrlByCodeRepository = new CheckShortUrlByCodeRepositoryStub();
   const sut = new AddShortUrlUsecase({ checkShortUrlByCodeRepository });
   return {
+    codeAlreadyInUseError,
     checkShortUrlByCodeRepository,
     sut,
   };
@@ -22,25 +30,18 @@ describe('AddShortUrlUsecase', () => {
       checkShortUrlByCodeRepository,
       'checkByCode',
     );
-    await sut.handle({
-      url: 'full-url',
-      shortCode: 'short-code',
-      validityInDays: 5,
-    });
+    await sut.handle(mockRequest());
     expect(checkShortUrlSpy).toHaveBeenCalledWith('short-code');
   });
 
   it('Should return CodeAlreadyInUseError if CheckShortUrlByCodeRepository returns true', async () => {
-    const { checkShortUrlByCodeRepository, sut } = makeSut();
+    const { codeAlreadyInUseError, checkShortUrlByCodeRepository, sut } =
+      makeSut();
     jest
       .spyOn(checkShortUrlByCodeRepository, 'checkByCode')
       .mockResolvedValueOnce(true);
-    const output = sut.handle({
-      url: 'full-url',
-      shortCode: 'short-code',
-      validityInDays: 5,
-    });
-    expect(output).resolves.toEqual(new Error('Code already in use'));
+    const output = sut.handle(mockRequest());
+    expect(output).resolves.toEqual(codeAlreadyInUseError);
   });
 });
 
