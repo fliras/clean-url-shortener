@@ -43,6 +43,17 @@ describe('AddShortUrlUsecase', () => {
     const output = sut.handle(mockRequest());
     expect(output).resolves.toEqual(codeAlreadyInUseError);
   });
+
+  it('Should throw if CheckShortUrlByCodeRepository throws', async () => {
+    const { checkShortUrlByCodeRepository, sut } = makeSut();
+    jest
+      .spyOn(checkShortUrlByCodeRepository, 'checkByCode')
+      .mockImplementationOnce(() => {
+        throw new Error();
+      });
+    const output = sut.handle(mockRequest());
+    expect(output).rejects.toThrow();
+  });
 });
 
 /*
