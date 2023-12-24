@@ -115,6 +115,13 @@ describe('AddShortUrlUsecase', () => {
       expirationDate: undefined,
     });
   });
+
+  it('Should throw if AddShortUrlRepository throws', async () => {
+    const { addShortUrlRepository, sut } = makeSut();
+    jest.spyOn(addShortUrlRepository, 'add').mockImplementationOnce(mockThrow);
+    const output = sut.handle(mockRequest());
+    expect(output).rejects.toThrow();
+  });
 });
 
 /*
