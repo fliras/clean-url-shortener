@@ -29,6 +29,19 @@ describe('AddShortUrlUsecase', () => {
     });
     expect(checkShortUrlSpy).toHaveBeenCalledWith('short-code');
   });
+
+  it('Should return CodeAlreadyInUseError if CheckShortUrlByCodeRepository returns true', async () => {
+    const { checkShortUrlByCodeRepository, sut } = makeSut();
+    jest
+      .spyOn(checkShortUrlByCodeRepository, 'checkByCode')
+      .mockResolvedValueOnce(true);
+    const output = sut.handle({
+      url: 'full-url',
+      shortCode: 'short-code',
+      validityInDays: 5,
+    });
+    expect(output).resolves.toEqual(new Error('Code already in use'));
+  });
 });
 
 /*

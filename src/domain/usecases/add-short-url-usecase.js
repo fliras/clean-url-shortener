@@ -6,6 +6,10 @@ export default class AddShortUrlUsecase {
   }
 
   async handle({ url, shortCode, validityInDays }) {
-    await this.#checkShortUrlByCodeRepository.checkByCode(shortCode);
+    const shortCodeAlreadyInUse =
+      await this.#checkShortUrlByCodeRepository.checkByCode(shortCode);
+    if (shortCodeAlreadyInUse) {
+      return new Error('Code already in use');
+    }
   }
 }
