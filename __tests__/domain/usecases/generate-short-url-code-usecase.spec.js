@@ -11,10 +11,20 @@ const makeSut = () => {
 };
 
 describe('GenerateShortUrlCodeUsecase', () => {
-  test('Should return a shortCode according to the specified length', async () => {
+  it('Should return a shortCode according to the specified length', async () => {
     const shortCodeLength = 13;
     const { sut } = makeSut();
     const response = await sut.handle(shortCodeLength);
     expect(response.length).toBe(shortCodeLength);
+  });
+
+  it('Should throw if UniqueCodeGenerator throws', async () => {
+    const { sut, uniqueCodeGenerator } = makeSut();
+    const shortCodeLength = 13;
+    jest.spyOn(uniqueCodeGenerator, 'generate').mockImplementationOnce(() => {
+      throw new Error();
+    });
+    const response = sut.handle(shortCodeLength);
+    expect(response).rejects.toThrow();
   });
 });
