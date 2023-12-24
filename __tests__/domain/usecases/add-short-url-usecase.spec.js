@@ -1,5 +1,13 @@
 import AddShortUrlUsecase from '@/domain/usecases/add-short-url-usecase.js';
 
+class TimestampAdderStub {
+  addedTimestamp = new Date();
+
+  addDays() {
+    return this.addedTimestamp;
+  }
+}
+
 class CheckShortUrlByCodeRepositoryStub {
   async checkByCode() {
     return false;
@@ -15,10 +23,15 @@ const mockRequest = () => ({
 const makeSut = () => {
   const codeAlreadyInUseError = new Error('Code already in use');
   const checkShortUrlByCodeRepository = new CheckShortUrlByCodeRepositoryStub();
-  const sut = new AddShortUrlUsecase({ checkShortUrlByCodeRepository });
+  const timestampAdder = new TimestampAdderStub();
+  const sut = new AddShortUrlUsecase({
+    checkShortUrlByCodeRepository,
+    timestampAdder,
+  });
   return {
     codeAlreadyInUseError,
     checkShortUrlByCodeRepository,
+    timestampAdder,
     sut,
   };
 };
@@ -53,6 +66,13 @@ describe('AddShortUrlUsecase', () => {
       });
     const output = sut.handle(mockRequest());
     expect(output).rejects.toThrow();
+  });
+
+  it('Should call TimestampAdder with correct values if validityInDays is provided', async () => {
+    const { timestampAdder, sut } = makeSut();
+    const timestampAdderSpy = jest.spyOn(timestampAdder, 'addDays');
+    await sut.handle(mockRequest());
+    expect(timestampAdderSpy).toHaveBeenCalled();
   });
 });
 
