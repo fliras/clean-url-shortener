@@ -1,19 +1,19 @@
 import TimestampOperations from '@/infra/timestamp/timestamp-operations.js';
 
-const makeSut = () => {
-  const daysToAdd = 5;
-  const sut = new TimestampOperations();
-  return {
-    daysToAdd,
-    sut,
-  };
-};
+const DAYS_TO_ADD = 5;
+const GIVEN_TIMESTAMP = new Date('2001-01-13');
+const GIVEN_TIMESTAMP_ADDED = new Date('2001-01-18');
+const MOCKED_SYSTEM_TIMESTAMP = new Date('2001-01-01');
+const MOCKED_SYSTEM_TIMESTAMP_ADDED = new Date('2001-01-06');
+
+const makeSut = () => ({
+  sut: new TimestampOperations(),
+});
 
 describe('TimestampOperations', () => {
   beforeEach(() => {
-    const mockedTimestamp = new Date('2001-01-01');
     jest.useFakeTimers('modern');
-    jest.setSystemTime(mockedTimestamp);
+    jest.setSystemTime(MOCKED_SYSTEM_TIMESTAMP);
   });
 
   afterAll(() => {
@@ -22,22 +22,23 @@ describe('TimestampOperations', () => {
 
   describe('addDays()', () => {
     it('Should return a Date object', () => {
-      const { daysToAdd, sut } = makeSut();
-      const output = sut.addDays(daysToAdd);
+      const { sut } = makeSut();
+      const output = sut.addDays(DAYS_TO_ADD);
       expect(output).toBeInstanceOf(Date);
     });
 
-    it('Should return a timestamp added to the provided number of days (without a given timestamp)', () => {
-      const { daysToAdd, sut } = makeSut();
-      const output = sut.addDays(daysToAdd);
-      expect(output).toEqual(new Date('2001-01-06'));
-    });
+    describe('Should return a timestamp added to the provided number of days', () => {
+      it('without a given timestamp', () => {
+        const { sut } = makeSut();
+        const output = sut.addDays(DAYS_TO_ADD);
+        expect(output).toEqual(MOCKED_SYSTEM_TIMESTAMP_ADDED);
+      });
 
-    it('Should return a timestamp added to the provided number of days (with a given timestamp)', () => {
-      const { daysToAdd, sut } = makeSut();
-      const givenTimestamp = new Date('2001-01-13');
-      const output = sut.addDays(daysToAdd, givenTimestamp);
-      expect(output).toEqual(new Date('2001-01-18'));
+      it('with a given timestamp', () => {
+        const { sut } = makeSut();
+        const output = sut.addDays(DAYS_TO_ADD, GIVEN_TIMESTAMP);
+        expect(output).toEqual(GIVEN_TIMESTAMP_ADDED);
+      });
     });
   });
 });
