@@ -13,6 +13,13 @@ const makeSut = () => {
 };
 
 describe('GenerateShortUrlCodeUsecase', () => {
+  it('Should call uniqueCodeGenerator with correct values', async () => {
+    const { sut, shortCodeLength, uniqueCodeGenerator } = makeSut();
+    const codeGeneratorSpy = jest.spyOn(uniqueCodeGenerator, 'generate');
+    await sut.handle(shortCodeLength);
+    expect(codeGeneratorSpy).toHaveBeenCalledWith(shortCodeLength);
+  });
+
   it('Should return a shortCode according to the specified length', async () => {
     const { sut, shortCodeLength } = makeSut();
     const response = await sut.handle(shortCodeLength);
