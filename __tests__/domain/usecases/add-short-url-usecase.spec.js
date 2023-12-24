@@ -103,6 +103,18 @@ describe('AddShortUrlUsecase', () => {
       expirationDate: timestampAdder.addedTimestamp,
     });
   });
+
+  it('Should call AddShortUrlRepository with correct values (when validityInDays is not provided)', async () => {
+    const { addShortUrlRepository, sut } = makeSut();
+    const addShortUrlSpy = jest.spyOn(addShortUrlRepository, 'add');
+    const request = { ...mockRequest(), validityInDays: undefined };
+    await sut.handle(request);
+    expect(addShortUrlSpy).toHaveBeenCalledWith({
+      url: request.url,
+      shortCode: request.shortCode,
+      expirationDate: undefined,
+    });
+  });
 });
 
 /*
