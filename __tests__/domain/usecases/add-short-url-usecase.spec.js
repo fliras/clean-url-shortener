@@ -74,6 +74,14 @@ describe('AddShortUrlUsecase', () => {
     await sut.handle(mockRequest());
     expect(timestampAdderSpy).toHaveBeenCalled();
   });
+
+  it('Should call TimestampAdder with correct values', async () => {
+    const { timestampAdder, sut } = makeSut();
+    const timestampAdderSpy = jest.spyOn(timestampAdder, 'addDays');
+    const request = mockRequest();
+    await sut.handle(request);
+    expect(timestampAdderSpy).toHaveBeenCalledWith(request.validityInDays);
+  });
 });
 
 /*
