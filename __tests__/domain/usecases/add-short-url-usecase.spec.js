@@ -20,6 +20,10 @@ const mockRequest = () => ({
   validityInDays: 5,
 });
 
+const mockThrow = () => {
+  throw new Error();
+};
+
 const makeSut = () => {
   const codeAlreadyInUseError = new Error('Code already in use');
   const checkShortUrlByCodeRepository = new CheckShortUrlByCodeRepositoryStub();
@@ -61,21 +65,12 @@ describe('AddShortUrlUsecase', () => {
     const { checkShortUrlByCodeRepository, sut } = makeSut();
     jest
       .spyOn(checkShortUrlByCodeRepository, 'checkByCode')
-      .mockImplementationOnce(() => {
-        throw new Error();
-      });
+      .mockImplementationOnce(mockThrow);
     const output = sut.handle(mockRequest());
     expect(output).rejects.toThrow();
   });
 
   it('Should call TimestampAdder with correct values if validityInDays is provided', async () => {
-    const { timestampAdder, sut } = makeSut();
-    const timestampAdderSpy = jest.spyOn(timestampAdder, 'addDays');
-    await sut.handle(mockRequest());
-    expect(timestampAdderSpy).toHaveBeenCalled();
-  });
-
-  it('Should call TimestampAdder with correct values', async () => {
     const { timestampAdder, sut } = makeSut();
     const timestampAdderSpy = jest.spyOn(timestampAdder, 'addDays');
     const request = mockRequest();
@@ -85,9 +80,7 @@ describe('AddShortUrlUsecase', () => {
 
   it('Should throw if TimestampAdder throws', async () => {
     const { timestampAdder, sut } = makeSut();
-    jest.spyOn(timestampAdder, 'addDays').mockImplementationOnce(() => {
-      throw new Error();
-    });
+    jest.spyOn(timestampAdder, 'addDays').mockImplementationOnce(mockThrow);
     const output = sut.handle(mockRequest());
     expect(output).rejects.toThrow();
   });
