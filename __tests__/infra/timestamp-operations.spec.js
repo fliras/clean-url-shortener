@@ -32,5 +32,12 @@ describe('TimestampOperations', () => {
       const output = sut.addDays(daysToAdd);
       expect(output).toEqual(new Date('2001-01-06'));
     });
+
+    it('Should return a timestamp added to the provided number of days (with a given timestamp)', () => {
+      const { daysToAdd, sut } = makeSut();
+      const givenTimestamp = new Date('2001-01-13');
+      const output = sut.addDays(daysToAdd, givenTimestamp);
+      expect(output).toEqual(new Date('2001-01-18'));
+    });
   });
 });
