@@ -1,4 +1,5 @@
 import AddShortUrlUsecase from '@/domain/usecases/add-short-url-usecase.js';
+import CodeAlreadyInUseError from '@/domain/errors/code-already-in-use-error.js';
 
 class CheckShortUrlByCodeRepositoryStub {
   async checkByCode() {
@@ -39,7 +40,6 @@ const mockThrow = () => {
 };
 
 const makeSut = () => {
-  const codeAlreadyInUseError = new Error('Code already in use');
   const checkShortUrlByCodeRepository = new CheckShortUrlByCodeRepositoryStub();
   const timestampAdder = new TimestampAdderStub();
   const addShortUrlRepository = new AddShortUrlRepositoryStub();
@@ -49,7 +49,6 @@ const makeSut = () => {
     addShortUrlRepository,
   });
   return {
-    codeAlreadyInUseError,
     checkShortUrlByCodeRepository,
     timestampAdder,
     addShortUrlRepository,
@@ -69,13 +68,12 @@ describe('AddShortUrlUsecase', () => {
   });
 
   it('Should return CodeAlreadyInUseError if CheckShortUrlByCodeRepository returns true', async () => {
-    const { codeAlreadyInUseError, checkShortUrlByCodeRepository, sut } =
-      makeSut();
+    const { checkShortUrlByCodeRepository, sut } = makeSut();
     jest
       .spyOn(checkShortUrlByCodeRepository, 'checkByCode')
       .mockResolvedValueOnce(true);
     const output = sut.handle(mockRequest());
-    expect(output).resolves.toEqual(codeAlreadyInUseError);
+    expect(output).resolves.toEqual(new CodeAlreadyInUseError());
   });
 
   it('Should throw if CheckShortUrlByCodeRepository throws', async () => {
@@ -108,9 +106,8 @@ describe('AddShortUrlUsecase', () => {
     const request = mockRequest();
     await sut.handle(request);
     expect(addShortUrlSpy).toHaveBeenCalledWith({
-      userId: request.userId,
-      url: request.url,
-      shortCode: request.shortCode,
+      ...request,
+      validityInDays: undefined,
       expirationDate: timestampAdder.addedTimestamp,
     });
   });
@@ -121,9 +118,8 @@ describe('AddShortUrlUsecase', () => {
     const request = { ...mockRequest(), validityInDays: undefined };
     await sut.handle(request);
     expect(addShortUrlSpy).toHaveBeenCalledWith({
-      userId: request.userId,
-      url: request.url,
-      shortCode: request.shortCode,
+      ...request,
+      validityInDays: undefined,
       expirationDate: undefined,
     });
   });
