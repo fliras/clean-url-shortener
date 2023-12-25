@@ -1,12 +1,14 @@
 export default class GenerateShortUrlCodeUsecase {
+  #shortCodeLength;
   #uniqueCodeGenerator;
 
-  constructor({ uniqueCodeGenerator }) {
+  constructor({ shortCodeLength, uniqueCodeGenerator }) {
+    this.#shortCodeLength = shortCodeLength;
     this.#uniqueCodeGenerator = uniqueCodeGenerator;
   }
 
-  async handle(shortCodeLength) {
-    const shortCode = this.#uniqueCodeGenerator.generate(shortCodeLength);
+  async handle() {
+    const shortCode = this.#uniqueCodeGenerator.generate(this.#shortCodeLength);
     return shortCode;
   }
 }

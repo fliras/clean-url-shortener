@@ -4,7 +4,10 @@ import UniqueCodeGenerator from '@/infra/cripto/unique-code-generator.js';
 const makeSut = () => {
   const shortCodeLength = 13;
   const uniqueCodeGenerator = new UniqueCodeGenerator();
-  const sut = new GenerateShortUrlCodeUsecase({ uniqueCodeGenerator });
+  const sut = new GenerateShortUrlCodeUsecase({
+    shortCodeLength,
+    uniqueCodeGenerator,
+  });
   return {
     shortCodeLength,
     uniqueCodeGenerator,
