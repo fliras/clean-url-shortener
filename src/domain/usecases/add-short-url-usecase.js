@@ -15,13 +15,14 @@ export default class AddShortUrlUsecase {
     this.#addShortUrlRepository = addShortUrlRepository;
   }
 
-  async handle({ url, shortCode, validityInDays }) {
+  async handle({ userId, url, shortCode, validityInDays }) {
     const shortCodeAlreadyInUse =
       await this.#checkShortUrlByCodeRepository.checkByCode(shortCode);
     if (shortCodeAlreadyInUse) return new CodeAlreadyInUseError();
     const expirationDate =
       validityInDays && this.#timestampAdder.addDays(validityInDays);
     const shortUrl = await this.#addShortUrlRepository.add({
+      userId,
       url,
       shortCode,
       expirationDate,

@@ -28,6 +28,7 @@ class AddShortUrlRepositoryStub {
 }
 
 const mockRequest = () => ({
+  userId: 1,
   url: 'full-url',
   shortCode: 'short-code',
   validityInDays: 5,
@@ -107,6 +108,7 @@ describe('AddShortUrlUsecase', () => {
     const request = mockRequest();
     await sut.handle(request);
     expect(addShortUrlSpy).toHaveBeenCalledWith({
+      userId: request.userId,
       url: request.url,
       shortCode: request.shortCode,
       expirationDate: timestampAdder.addedTimestamp,
@@ -119,6 +121,7 @@ describe('AddShortUrlUsecase', () => {
     const request = { ...mockRequest(), validityInDays: undefined };
     await sut.handle(request);
     expect(addShortUrlSpy).toHaveBeenCalledWith({
+      userId: request.userId,
       url: request.url,
       shortCode: request.shortCode,
       expirationDate: undefined,
