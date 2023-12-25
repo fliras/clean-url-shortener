@@ -1,3 +1,5 @@
+import CodeAlreadyInUseError from '../errors/code-already-in-use-error.js';
+
 export default class AddShortUrlUsecase {
   #checkShortUrlByCodeRepository;
   #timestampAdder;
@@ -16,7 +18,7 @@ export default class AddShortUrlUsecase {
   async handle({ url, shortCode, validityInDays }) {
     const shortCodeAlreadyInUse =
       await this.#checkShortUrlByCodeRepository.checkByCode(shortCode);
-    if (shortCodeAlreadyInUse) return new Error('Code already in use');
+    if (shortCodeAlreadyInUse) return new CodeAlreadyInUseError();
     const expirationDate =
       validityInDays && this.#timestampAdder.addDays(validityInDays);
     const shortUrl = await this.#addShortUrlRepository.add({
