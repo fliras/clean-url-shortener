@@ -41,12 +41,15 @@ const mockRequest = () => ({
     shortCode: 'short-code',
     validityInDays: new Date(),
   },
+  userData: {
+    id: 1,
+  },
 });
 
 describe('AddShortUrlController', () => {
   it('Should return badRequest if url are not provided', async () => {
     const { sut } = makeSut();
-    const response = await sut.handle({ body: {} });
+    const response = await sut.handle({ body: {}, userData: {} });
     expect(response).toEqual(badRequest(new MissingParamError('url')));
   });
 
@@ -56,7 +59,7 @@ describe('AddShortUrlController', () => {
       generateShortUrlCodeUsecase,
       'handle',
     );
-    await sut.handle({ body: { url: 'full-url' } });
+    await sut.handle({ body: { url: 'full-url' }, userData: {} });
     expect(generateShortUrlCodeSpy).toHaveBeenCalled();
   });
 
@@ -67,7 +70,10 @@ describe('AddShortUrlController', () => {
       .mockImplementationOnce(() => {
         throw new Error();
       });
-    const response = await sut.handle({ body: { url: 'full-url' } });
+    const response = await sut.handle({
+      body: { url: 'full-url' },
+      userData: { id: 1 },
+    });
     expect(response).toEqual(serverError());
   });
 
@@ -76,7 +82,10 @@ describe('AddShortUrlController', () => {
     const addShortUrlSpy = jest.spyOn(addShortUrlUsecase, 'handle');
     const request = mockRequest();
     await sut.handle(request);
-    expect(addShortUrlSpy).toHaveBeenCalledWith(request.body);
+    expect(addShortUrlSpy).toHaveBeenCalledWith({
+      ...request.body,
+      userId: request.userData.id,
+    });
   });
 
   it('Should return serverError if AddShortUrlUsecase throws', async () => {
