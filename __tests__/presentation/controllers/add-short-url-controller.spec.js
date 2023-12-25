@@ -11,9 +11,12 @@ class GenerateShortUrlCodeUsecaseStub {
 class AddShortUrlUsecaseStub {
   result = {
     id: 1,
-    fullUrl: 'full-url',
     shortCode: 'short-code',
+    fullUrl: 'full-url',
+    clicks: 0,
     expirationDate: new Date(),
+    createdAt: new Date(),
+    userId: 1,
   };
 
   async handle() {
