@@ -1,5 +1,6 @@
 import AddShortUrlController from '@/presentation/controllers/add-short-url-controller.js';
 import { badRequest, serverError, ok } from '@/presentation/helpers/http.js';
+import MissingParamError from '@/presentation/errors/missing-param-error.js';
 
 class GenerateShortUrlCodeUsecaseStub {
   async handle() {
@@ -46,9 +47,7 @@ describe('AddShortUrlController', () => {
   it('Should return badRequest if url are not provided', async () => {
     const { sut } = makeSut();
     const response = await sut.handle({ body: {} });
-    expect(response).toEqual(
-      badRequest(new Error('required fields not informed')),
-    );
+    expect(response).toEqual(badRequest(new MissingParamError('url')));
   });
 
   it('Should call GenerateShortUrlCodeUsecase if shortCode is not provided', async () => {
