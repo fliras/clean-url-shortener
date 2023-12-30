@@ -61,5 +61,11 @@ describe('ShortUrlsRepository', () => {
       const shortUrlExists = await sut.checkByCode(shortUrl.short_code);
       expect(shortUrlExists).toBe(true);
     });
+
+    it("Should return false if short url doesn't exists", async () => {
+      const { sut } = makeSut();
+      const shortUrlExists = await sut.checkByCode('random-short-code');
+      expect(shortUrlExists).toBe(false);
+    });
   });
 });
