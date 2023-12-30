@@ -10,11 +10,23 @@ export default class ShortUrlsRepository {
         user_id: data.userId,
       })
       .returning('*');
-    return shortUrl;
+    return this.#map(shortUrl);
   }
 
   async checkByCode(code) {
     const shortUrl = await db('short_urls').first().where({ short_code: code });
     return shortUrl !== undefined;
+  }
+
+  #map(shortUrl) {
+    return {
+      shortUrlId: shortUrl.short_url_id,
+      shortCode: shortUrl.short_code,
+      fullUrl: shortUrl.full_url,
+      clicks: shortUrl.clicks,
+      expirationDate: shortUrl.expiration_date,
+      createdAt: shortUrl.created_at,
+      userId: shortUrl.user_id,
+    };
   }
 }

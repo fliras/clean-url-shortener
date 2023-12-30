@@ -41,13 +41,10 @@ describe('ShortUrlsRepository', () => {
       const userId = await mockUserId();
       const addParams = mockAddParams(userId);
       const shortUrl = await sut.add(addParams);
-      expect(shortUrl?.short_url_id).toBeTruthy();
+      expect(shortUrl?.shortUrlId).toBeTruthy();
       expect(shortUrl).toMatchObject({
-        short_code: addParams.shortCode,
-        full_url: addParams.fullUrl,
+        ...addParams,
         clicks: 0,
-        expiration_date: addParams.expirationDate,
-        user_id: addParams.userId,
       });
     });
   });
@@ -58,7 +55,7 @@ describe('ShortUrlsRepository', () => {
       const userId = await mockUserId();
       const addParams = mockAddParams(userId);
       const shortUrl = await sut.add(addParams);
-      const shortUrlExists = await sut.checkByCode(shortUrl.short_code);
+      const shortUrlExists = await sut.checkByCode(shortUrl.shortCode);
       expect(shortUrlExists).toBe(true);
     });
 
