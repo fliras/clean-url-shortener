@@ -51,4 +51,15 @@ describe('ShortUrlsRepository', () => {
       expect(shortUrl.user_id).toBe(addParams.userId);
     });
   });
+
+  describe('checkByCode', () => {
+    it('Should return true if short url exists', async () => {
+      const { sut } = makeSut();
+      const userId = await mockUserId();
+      const addParams = mockAddParams(userId);
+      const shortUrl = await sut.add(addParams);
+      const shortUrlExists = await sut.checkByCode(shortUrl.short_code);
+      expect(shortUrlExists).toBe(true);
+    });
+  });
 });

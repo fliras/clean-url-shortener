@@ -12,4 +12,9 @@ export default class ShortUrlsRepository {
       .returning('*');
     return shortUrl;
   }
+
+  async checkByCode(code) {
+    const shortUrl = await db('short_urls').first().where({ short_code: code });
+    return shortUrl !== undefined;
+  }
 }
