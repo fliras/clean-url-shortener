@@ -1,5 +1,5 @@
 import AuthenticationMiddleware from '@/presentation/middlewares/authentication-middleware';
-import { unauthorized, ok } from '@/presentation/helpers/http.js';
+import { unauthorized, ok, serverError } from '@/presentation/helpers/http.js';
 
 class LoadUserByTokenUsecaseStub {
   user = { userId: 1 };
@@ -27,7 +27,7 @@ const mockInput = () => ({
 });
 
 describe('AuthenticationMiddleware', () => {
-  it('Should return UnauthorizedError if accessToken is not provided', async () => {
+  it('Should return unauthorized if accessToken is not provided', async () => {
     const { sut } = makeSut();
     const output = await sut.handle({});
     expect(output).toEqual(unauthorized());
@@ -50,13 +50,13 @@ describe('AuthenticationMiddleware', () => {
     expect(output).toEqual(unauthorized());
   });
 
-  it('Should throw if LoadUserByTokenUsecase throws', async () => {
+  it('Should return serverError if LoadUserByTokenUsecase throws', async () => {
     const { loadUserByTokenUsecase, sut } = makeSut();
     jest
       .spyOn(loadUserByTokenUsecase, 'handle')
       .mockImplementationOnce(mockThrow);
-    const output = sut.handle(mockInput());
-    expect(output).rejects.toThrow();
+    const output = await sut.handle(mockInput());
+    expect(output).toEqual(serverError());
   });
 
   it('Should return ok on success', async () => {
