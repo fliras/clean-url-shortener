@@ -12,10 +12,10 @@ class DecrypterStub {
 
 class LoadUserByIdRepositoryStub {
   result = {
-    user_id: 1,
+    userId: 1,
     username: 'user01',
     password: 'hashed-password',
-    created_at: new Date(),
+    createdAt: new Date(),
   };
 
   async loadById() {
@@ -90,9 +90,7 @@ describe('LoadUserByTokenUsecase', () => {
     const output = await sut.handle(mockInput());
     const loadedUser = loadUserByIdRepository.result;
     expect(output).toEqual({
-      userId: loadedUser.user_id,
-      username: loadedUser.username,
-      createdAt: loadedUser.created_at,
+      ...loadedUser,
       password: undefined,
     });
   });

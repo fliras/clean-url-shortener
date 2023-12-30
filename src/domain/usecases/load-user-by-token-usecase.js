@@ -17,14 +17,8 @@ export default class LoadUserByTokenUsecase {
       tokenPayload.userId,
     );
     if (!loadedUser) return new UserNotFoundError();
-    return this.#map(loadedUser);
-  }
-
-  #map(user) {
     return {
-      userId: user.user_id,
-      username: user.username,
-      createdAt: user.created_at,
+      ...loadedUser,
       password: undefined,
     };
   }
