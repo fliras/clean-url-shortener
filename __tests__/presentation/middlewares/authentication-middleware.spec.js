@@ -20,6 +20,10 @@ const mockThrow = () => {
   throw new Error();
 };
 
+const mockInput = () => ({
+  accessToken: 'any-token',
+});
+
 describe('AuthenticationMiddleware', () => {
   it('Should return UnauthorizedError if accessToken is not provided', async () => {
     const { sut } = makeSut();
@@ -30,14 +34,15 @@ describe('AuthenticationMiddleware', () => {
   it('Should call CheckUserByTokenUsecase with correct values', async () => {
     const { checkUserByTokenUsecase, sut } = makeSut();
     const checkUserSpy = jest.spyOn(checkUserByTokenUsecase, 'handle');
-    await sut.handle({ accessToken: 'any-token' });
-    expect(checkUserSpy).toHaveBeenCalledWith('any-token');
+    const input = mockInput();
+    await sut.handle(input);
+    expect(checkUserSpy).toHaveBeenCalledWith(input.accessToken);
   });
 
   it('Should return unauthorized if CheckUserByTokenUsecase returns false', async () => {
     const { checkUserByTokenUsecase, sut } = makeSut();
     jest.spyOn(checkUserByTokenUsecase, 'handle').mockResolvedValueOnce(false);
-    const output = await sut.handle({ accessToken: 'any-token' });
+    const output = await sut.handle(mockInput());
     expect(output).toEqual(unauthorized());
   });
 
@@ -46,7 +51,7 @@ describe('AuthenticationMiddleware', () => {
     jest
       .spyOn(checkUserByTokenUsecase, 'handle')
       .mockImplementationOnce(mockThrow);
-    const output = sut.handle({ accessToken: 'any-token' });
+    const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
   });
 });
