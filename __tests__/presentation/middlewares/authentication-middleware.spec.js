@@ -1,9 +1,12 @@
 import AuthenticationMiddleware from '@/presentation/middlewares/authentication-middleware';
 import { unauthorized } from '@/presentation/helpers/http.js';
+import { ok } from '../../../src/presentation/helpers/http';
 
 class CheckUserByTokenUsecaseStub {
+  user = { userId: 1 };
+
   async handle() {
-    return true;
+    return this.user;
   }
 }
 
@@ -39,9 +42,11 @@ describe('AuthenticationMiddleware', () => {
     expect(checkUserSpy).toHaveBeenCalledWith(input.accessToken);
   });
 
-  it('Should return unauthorized if CheckUserByTokenUsecase returns false', async () => {
+  it('Should return unauthorized if CheckUserByTokenUsecase returns an Error', async () => {
     const { checkUserByTokenUsecase, sut } = makeSut();
-    jest.spyOn(checkUserByTokenUsecase, 'handle').mockResolvedValueOnce(false);
+    jest
+      .spyOn(checkUserByTokenUsecase, 'handle')
+      .mockResolvedValueOnce(new Error());
     const output = await sut.handle(mockInput());
     expect(output).toEqual(unauthorized());
   });
@@ -53,5 +58,11 @@ describe('AuthenticationMiddleware', () => {
       .mockImplementationOnce(mockThrow);
     const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
+  });
+
+  it('Should return ok on success', async () => {
+    const { sut, checkUserByTokenUsecase } = makeSut();
+    const output = await sut.handle(mockInput());
+    expect(output).toEqual(ok({ userId: checkUserByTokenUsecase.user.id }));
   });
 });

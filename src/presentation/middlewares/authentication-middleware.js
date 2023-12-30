@@ -1,4 +1,4 @@
-import { unauthorized } from '../helpers/http.js';
+import { unauthorized, ok } from '../helpers/http.js';
 
 export default class AuthenticationMiddleware {
   #checkUserByTokenUsecase;
@@ -9,7 +9,8 @@ export default class AuthenticationMiddleware {
 
   async handle({ accessToken }) {
     if (!accessToken) return unauthorized();
-    const userExists = await this.#checkUserByTokenUsecase.handle(accessToken);
-    if (!userExists) return unauthorized();
+    const loadedUser = await this.#checkUserByTokenUsecase.handle(accessToken);
+    if (loadedUser instanceof Error) return unauthorized();
+    return ok({ userId: loadedUser.user_id });
   }
 }
