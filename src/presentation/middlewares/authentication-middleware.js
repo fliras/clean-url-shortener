@@ -9,6 +9,7 @@ export default class AuthenticationMiddleware {
 
   async handle({ accessToken }) {
     if (!accessToken) return unauthorized();
-    await this.#checkUserByIdUsecase.handle(accessToken);
+    const userExists = await this.#checkUserByIdUsecase.handle(accessToken);
+    if (!userExists) return unauthorized();
   }
 }

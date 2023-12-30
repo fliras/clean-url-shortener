@@ -29,4 +29,11 @@ describe('AuthenticationMiddleware', () => {
     await sut.handle({ accessToken: 'any-token' });
     expect(checkUserSpy).toHaveBeenCalledWith('any-token');
   });
+
+  it('Should return unauthorized if CheckUserByIdUsecase returns false', async () => {
+    const { checkUserByIdUsecase, sut } = makeSut();
+    jest.spyOn(checkUserByIdUsecase, 'handle').mockResolvedValueOnce(false);
+    const output = await sut.handle({ accessToken: 'any-token' });
+    expect(output).toEqual(unauthorized());
+  });
 });
