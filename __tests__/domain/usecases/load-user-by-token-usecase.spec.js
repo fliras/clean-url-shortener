@@ -18,6 +18,10 @@ const makeSut = () => {
   };
 };
 
+const mockThrow = () => {
+  throw new Error();
+};
+
 describe('LoadUserByTokenUsecase', () => {
   it('Should call decrypter with correct values', async () => {
     const { decrypter, sut } = makeSut();
@@ -31,5 +35,12 @@ describe('LoadUserByTokenUsecase', () => {
     jest.spyOn(decrypter, 'decrypt').mockResolvedValueOnce(false);
     const output = await sut.handle('access-token');
     expect(output).toEqual(new InvalidTokenError());
+  });
+
+  it('Should throw if decrypter throws', async () => {
+    const { decrypter, sut } = makeSut();
+    jest.spyOn(decrypter, 'decrypt').mockImplementationOnce(mockThrow);
+    const output = sut.handle('access-token');
+    expect(output).rejects.toThrow();
   });
 });
