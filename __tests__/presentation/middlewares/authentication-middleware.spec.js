@@ -1,8 +1,7 @@
 import AuthenticationMiddleware from '@/presentation/middlewares/authentication-middleware';
-import { unauthorized } from '@/presentation/helpers/http.js';
-import { ok } from '../../../src/presentation/helpers/http';
+import { unauthorized, ok } from '@/presentation/helpers/http.js';
 
-class CheckUserByTokenUsecaseStub {
+class LoadUserByTokenUsecaseStub {
   user = { userId: 1 };
 
   async handle() {
@@ -11,10 +10,10 @@ class CheckUserByTokenUsecaseStub {
 }
 
 const makeSut = () => {
-  const checkUserByTokenUsecase = new CheckUserByTokenUsecaseStub();
-  const sut = new AuthenticationMiddleware({ checkUserByTokenUsecase });
+  const loadUserByTokenUsecase = new LoadUserByTokenUsecaseStub();
+  const sut = new AuthenticationMiddleware({ loadUserByTokenUsecase });
   return {
-    checkUserByTokenUsecase,
+    loadUserByTokenUsecase,
     sut,
   };
 };
@@ -34,35 +33,35 @@ describe('AuthenticationMiddleware', () => {
     expect(output).toEqual(unauthorized());
   });
 
-  it('Should call CheckUserByTokenUsecase with correct values', async () => {
-    const { checkUserByTokenUsecase, sut } = makeSut();
-    const checkUserSpy = jest.spyOn(checkUserByTokenUsecase, 'handle');
+  it('Should call LoadUserByTokenUsecase with correct values', async () => {
+    const { loadUserByTokenUsecase, sut } = makeSut();
+    const checkUserSpy = jest.spyOn(loadUserByTokenUsecase, 'handle');
     const input = mockInput();
     await sut.handle(input);
     expect(checkUserSpy).toHaveBeenCalledWith(input.accessToken);
   });
 
-  it('Should return unauthorized if CheckUserByTokenUsecase returns an Error', async () => {
-    const { checkUserByTokenUsecase, sut } = makeSut();
+  it('Should return unauthorized if LoadUserByTokenUsecase returns an Error', async () => {
+    const { loadUserByTokenUsecase, sut } = makeSut();
     jest
-      .spyOn(checkUserByTokenUsecase, 'handle')
+      .spyOn(loadUserByTokenUsecase, 'handle')
       .mockResolvedValueOnce(new Error());
     const output = await sut.handle(mockInput());
     expect(output).toEqual(unauthorized());
   });
 
-  it('Should throw if CheckUserByTokenUsecase throws', async () => {
-    const { checkUserByTokenUsecase, sut } = makeSut();
+  it('Should throw if LoadUserByTokenUsecase throws', async () => {
+    const { loadUserByTokenUsecase, sut } = makeSut();
     jest
-      .spyOn(checkUserByTokenUsecase, 'handle')
+      .spyOn(loadUserByTokenUsecase, 'handle')
       .mockImplementationOnce(mockThrow);
     const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
   });
 
   it('Should return ok on success', async () => {
-    const { sut, checkUserByTokenUsecase } = makeSut();
+    const { sut, loadUserByTokenUsecase } = makeSut();
     const output = await sut.handle(mockInput());
-    expect(output).toEqual(ok({ userId: checkUserByTokenUsecase.user.id }));
+    expect(output).toEqual(ok({ userId: loadUserByTokenUsecase.user.id }));
   });
 });
