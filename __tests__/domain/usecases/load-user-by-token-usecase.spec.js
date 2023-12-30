@@ -2,18 +2,33 @@ import LoadUserByTokenUsecase from '@/domain/usecases/load-user-by-token-usecase
 import InvalidTokenError from '@/domain/errors/invalid-token-error';
 
 class DecrypterStub {
+  result = { userId: 1 };
+
   async decrypt() {
-    return {
-      userId: 1,
-    };
+    return this.result;
+  }
+}
+
+class LoadUserByIdRepositoryStub {
+  result = {
+    id: 1,
+    username: 'user01',
+    password: 'hashed-password',
+    created_at: new Date(),
+  };
+
+  async handle() {
+    return this.result;
   }
 }
 
 const makeSut = () => {
   const decrypter = new DecrypterStub();
-  const sut = new LoadUserByTokenUsecase({ decrypter });
+  const loadUserByIdRepository = new LoadUserByIdRepositoryStub();
+  const sut = new LoadUserByTokenUsecase({ decrypter, loadUserByIdRepository });
   return {
     decrypter,
+    loadUserByIdRepository,
     sut,
   };
 };
@@ -44,5 +59,12 @@ describe('LoadUserByTokenUsecase', () => {
     jest.spyOn(decrypter, 'decrypt').mockImplementationOnce(mockThrow);
     const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
+  });
+
+  it('Should call LoadUserByIdRepository with correct values', async () => {
+    const { loadUserByIdRepository, decrypter, sut } = makeSut();
+    const loadUserSpy = jest.spyOn(loadUserByIdRepository, 'handle');
+    await sut.handle(mockInput());
+    expect(loadUserSpy).toHaveBeenCalledWith(decrypter.result.userId);
   });
 });
