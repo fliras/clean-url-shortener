@@ -1,16 +1,24 @@
-const badRequest = (error) => ({
-  statusCode: 400,
-  data: error.message,
-});
+import ServerError from '../errors/server-error.js';
+import UnauthorizedError from '../errors/unauthorized-error.js';
 
 const ok = (data) => ({
   statusCode: 200,
   data,
 });
 
-const serverError = () => ({
-  statusCode: 500,
-  data: new Error('Internal Server Error'),
+const badRequest = (error) => ({
+  statusCode: 400,
+  data: error,
 });
 
-export { badRequest, ok, serverError };
+const unauthorized = () => ({
+  statusCode: 403,
+  data: new UnauthorizedError(),
+});
+
+const serverError = () => ({
+  statusCode: 500,
+  data: new ServerError(),
+});
+
+export { ok, badRequest, unauthorized, serverError };
