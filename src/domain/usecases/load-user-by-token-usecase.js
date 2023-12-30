@@ -1,4 +1,5 @@
-import InvalidTokenError from '../errors/invalid-token-error';
+import InvalidTokenError from '../errors/invalid-token-error.js';
+import UserNotFoundError from '../errors/user-not-found-error.js';
 
 export default class LoadUserByTokenUsecase {
   #loadUserByIdRepository;
@@ -12,6 +13,9 @@ export default class LoadUserByTokenUsecase {
   async handle(token) {
     const tokenPayload = await this.#decrypter.decrypt(token);
     if (!tokenPayload) return new InvalidTokenError();
-    await this.#loadUserByIdRepository.handle(tokenPayload.userId);
+    const loadedUser = await this.#loadUserByIdRepository.handle(
+      tokenPayload.userId,
+    );
+    if (!loadedUser) return new UserNotFoundError();
   }
 }

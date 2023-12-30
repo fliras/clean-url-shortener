@@ -1,5 +1,6 @@
 import LoadUserByTokenUsecase from '@/domain/usecases/load-user-by-token-usecase.js';
-import InvalidTokenError from '@/domain/errors/invalid-token-error';
+import InvalidTokenError from '@/domain/errors/invalid-token-error.js';
+import UserNotFoundError from '@/domain/errors/user-not-found-error.js';
 
 class DecrypterStub {
   result = { userId: 1 };
@@ -66,5 +67,12 @@ describe('LoadUserByTokenUsecase', () => {
     const loadUserSpy = jest.spyOn(loadUserByIdRepository, 'handle');
     await sut.handle(mockInput());
     expect(loadUserSpy).toHaveBeenCalledWith(decrypter.result.userId);
+  });
+
+  it('Should return UserNotFoundError if LoadUserByIdRepository returns null', async () => {
+    const { loadUserByIdRepository, sut } = makeSut();
+    jest.spyOn(loadUserByIdRepository, 'handle').mockResolvedValueOnce(null);
+    const output = await sut.handle(mockInput());
+    expect(output).toEqual(new UserNotFoundError());
   });
 });
