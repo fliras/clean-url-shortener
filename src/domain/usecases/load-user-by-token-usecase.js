@@ -17,5 +17,6 @@ export default class LoadUserByTokenUsecase {
       tokenPayload.userId,
     );
     if (!loadedUser) return new UserNotFoundError();
+    return loadedUser;
   }
 }

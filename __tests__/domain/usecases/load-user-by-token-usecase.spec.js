@@ -84,4 +84,10 @@ describe('LoadUserByTokenUsecase', () => {
     const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
   });
+
+  it('Should return an user on success', async () => {
+    const { sut, loadUserByIdRepository } = makeSut();
+    const output = await sut.handle(mockInput());
+    expect(output).toEqual(loadUserByIdRepository.result);
+  });
 });
