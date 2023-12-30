@@ -18,7 +18,7 @@ class LoadUserByIdRepositoryStub {
     created_at: new Date(),
   };
 
-  async handle() {
+  async loadById() {
     return this.result;
   }
 }
@@ -64,14 +64,14 @@ describe('LoadUserByTokenUsecase', () => {
 
   it('Should call LoadUserByIdRepository with correct values', async () => {
     const { loadUserByIdRepository, decrypter, sut } = makeSut();
-    const loadUserSpy = jest.spyOn(loadUserByIdRepository, 'handle');
+    const loadUserSpy = jest.spyOn(loadUserByIdRepository, 'loadById');
     await sut.handle(mockInput());
     expect(loadUserSpy).toHaveBeenCalledWith(decrypter.result.userId);
   });
 
   it('Should return UserNotFoundError if LoadUserByIdRepository returns null', async () => {
     const { loadUserByIdRepository, sut } = makeSut();
-    jest.spyOn(loadUserByIdRepository, 'handle').mockResolvedValueOnce(null);
+    jest.spyOn(loadUserByIdRepository, 'loadById').mockResolvedValueOnce(null);
     const output = await sut.handle(mockInput());
     expect(output).toEqual(new UserNotFoundError());
   });
@@ -79,7 +79,7 @@ describe('LoadUserByTokenUsecase', () => {
   it('Should throw if LoadUserByIdRepository throws', async () => {
     const { loadUserByIdRepository, sut } = makeSut();
     jest
-      .spyOn(loadUserByIdRepository, 'handle')
+      .spyOn(loadUserByIdRepository, 'loadById')
       .mockImplementationOnce(mockThrow);
     const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
