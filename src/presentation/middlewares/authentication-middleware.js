@@ -12,7 +12,8 @@ export default class AuthenticationMiddleware {
       if (!accessToken) return unauthorized();
       const loadedUser = await this.#loadUserByTokenUsecase.handle(accessToken);
       if (loadedUser instanceof Error) return unauthorized();
-      return ok({ userId: loadedUser.user_id });
+      const { userId } = loadedUser;
+      return ok({ userId });
     } catch (error) {
       return serverError();
     }

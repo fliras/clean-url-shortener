@@ -62,6 +62,6 @@ describe('AuthenticationMiddleware', () => {
   it('Should return ok on success', async () => {
     const { sut, loadUserByTokenUsecase } = makeSut();
     const output = await sut.handle(mockInput());
-    expect(output).toEqual(ok({ userId: loadUserByTokenUsecase.user.id }));
+    expect(output).toEqual(ok({ userId: loadUserByTokenUsecase.user.userId }));
   });
 });
