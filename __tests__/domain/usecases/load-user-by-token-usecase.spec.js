@@ -75,4 +75,13 @@ describe('LoadUserByTokenUsecase', () => {
     const output = await sut.handle(mockInput());
     expect(output).toEqual(new UserNotFoundError());
   });
+
+  it('Should throw if LoadUserByIdRepository throws', async () => {
+    const { loadUserByIdRepository, sut } = makeSut();
+    jest
+      .spyOn(loadUserByIdRepository, 'handle')
+      .mockImplementationOnce(mockThrow);
+    const output = sut.handle(mockInput());
+    expect(output).rejects.toThrow();
+  });
 });
