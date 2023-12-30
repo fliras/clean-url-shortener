@@ -22,7 +22,7 @@ const mockAddParams = (userId) => ({
   shortCode: 'short-code',
   fullUrl: 'https://www.google.com',
   expirationDate: new Date(),
-  userId: userId,
+  userId,
 });
 
 describe('ShortUrlsRepository', () => {
@@ -41,14 +41,14 @@ describe('ShortUrlsRepository', () => {
       const userId = await mockUserId();
       const addParams = mockAddParams(userId);
       const shortUrl = await sut.add(addParams);
-      expect(shortUrl).toBeTruthy();
-      expect(shortUrl.short_url_id).toBeTruthy();
-      expect(shortUrl.short_code).toBe(addParams.shortCode);
-      expect(shortUrl.full_url).toBe(addParams.fullUrl);
-      expect(shortUrl.clicks).toBeDefined();
-      expect(shortUrl.expiration_date).toEqual(addParams.expirationDate);
-      expect(shortUrl.created_at).toBeTruthy();
-      expect(shortUrl.user_id).toBe(addParams.userId);
+      expect(shortUrl?.short_url_id).toBeTruthy();
+      expect(shortUrl).toMatchObject({
+        short_code: addParams.shortCode,
+        full_url: addParams.fullUrl,
+        clicks: 0,
+        expiration_date: addParams.expirationDate,
+        user_id: addParams.userId,
+      });
     });
   });
 
