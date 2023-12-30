@@ -1,15 +1,15 @@
 import { unauthorized } from '../helpers/http.js';
 
 export default class AuthenticationMiddleware {
-  #checkUserByIdUsecase;
+  #checkUserByTokenUsecase;
 
-  constructor({ checkUserByIdUsecase }) {
-    this.#checkUserByIdUsecase = checkUserByIdUsecase;
+  constructor({ checkUserByTokenUsecase }) {
+    this.#checkUserByTokenUsecase = checkUserByTokenUsecase;
   }
 
   async handle({ accessToken }) {
     if (!accessToken) return unauthorized();
-    const userExists = await this.#checkUserByIdUsecase.handle(accessToken);
+    const userExists = await this.#checkUserByTokenUsecase.handle(accessToken);
     if (!userExists) return unauthorized();
   }
 }
