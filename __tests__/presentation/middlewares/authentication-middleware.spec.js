@@ -16,6 +16,10 @@ const makeSut = () => {
   };
 };
 
+const mockThrow = () => {
+  throw new Error();
+};
+
 describe('AuthenticationMiddleware', () => {
   it('Should return UnauthorizedError if accessToken is not provided', async () => {
     const { sut } = makeSut();
@@ -35,5 +39,14 @@ describe('AuthenticationMiddleware', () => {
     jest.spyOn(checkUserByTokenUsecase, 'handle').mockResolvedValueOnce(false);
     const output = await sut.handle({ accessToken: 'any-token' });
     expect(output).toEqual(unauthorized());
+  });
+
+  it('Should throw if CheckUserByTokenUsecase throws', async () => {
+    const { checkUserByTokenUsecase, sut } = makeSut();
+    jest
+      .spyOn(checkUserByTokenUsecase, 'handle')
+      .mockImplementationOnce(mockThrow);
+    const output = sut.handle({ accessToken: 'any-token' });
+    expect(output).rejects.toThrow();
   });
 });
