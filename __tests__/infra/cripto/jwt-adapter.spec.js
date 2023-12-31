@@ -21,26 +21,26 @@ const mockThrow = () => {
 };
 
 describe('JwtAdapter', () => {
-  describe('verify()', () => {
+  describe('decrypt()', () => {
     it('Should call jwt.verify with correct values', async () => {
-      const verifySpy = jest.spyOn(jwt, 'verify');
+      const decryptSpy = jest.spyOn(jwt, 'verify');
       const { secret, sut } = makeSut();
       const token = 'token';
-      await sut.verify(token);
-      expect(verifySpy).toHaveBeenCalledWith(token, secret);
+      await sut.decrypt(token);
+      expect(decryptSpy).toHaveBeenCalledWith(token, secret);
     });
 
     it('Should throw if jwt.verify throws', async () => {
       const { sut } = makeSut();
       jest.spyOn(jwt, 'verify').mockImplementationOnce(mockThrow);
-      const output = sut.verify();
+      const output = sut.decrypt();
       expect(output).rejects.toThrow();
     });
 
     it('Should return a payload on success', async () => {
       const { sut } = makeSut();
       const token = 'token';
-      const output = await sut.verify(token);
+      const output = await sut.decrypt(token);
       expect(output).toBe('payload');
     });
   });

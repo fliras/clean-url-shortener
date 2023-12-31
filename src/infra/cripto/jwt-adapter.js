@@ -7,8 +7,8 @@ export default class JwtAdapter {
     this.#secret = secret;
   }
 
-  async verify(token) {
-    const payload = jwt.verify(token, this.#secret);
+  async decrypt(cipherText) {
+    const payload = jwt.verify(cipherText, this.#secret);
     return payload;
   }
 }
