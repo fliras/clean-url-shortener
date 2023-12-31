@@ -8,6 +8,7 @@ export default class JwtAdapter {
   }
 
   async verify(token) {
-    jwt.verify(token, this.#secret);
+    const payload = jwt.verify(token, this.#secret);
+    return payload;
   }
 }
