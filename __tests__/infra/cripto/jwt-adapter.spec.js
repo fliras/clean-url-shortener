@@ -16,6 +16,10 @@ const makeSut = () => {
   };
 };
 
+const mockThrow = () => {
+  throw new Error();
+};
+
 describe('JwtAdapter', () => {
   describe('verify()', () => {
     it('Should call jwt.verify with correct values', async () => {
@@ -24,6 +28,13 @@ describe('JwtAdapter', () => {
       const token = 'token';
       await sut.verify(token);
       expect(verifySpy).toHaveBeenCalledWith(token, secret);
+    });
+
+    it('Should throw if jwt.verify throws', async () => {
+      const { sut } = makeSut();
+      jest.spyOn(jwt, 'verify').mockImplementationOnce(mockThrow);
+      const output = sut.verify();
+      expect(output).rejects.toThrow();
     });
   });
 });
