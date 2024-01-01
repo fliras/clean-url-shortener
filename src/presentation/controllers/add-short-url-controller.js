@@ -21,6 +21,7 @@ export default class AddShortUrlController {
         shortCode: newShortCode,
         validityInDays,
       });
+      if (newShortUrl instanceof Error) return badRequest(newShortUrl);
       return ok(newShortUrl);
     } catch (error) {
       return serverError();
