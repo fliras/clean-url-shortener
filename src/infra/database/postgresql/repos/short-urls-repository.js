@@ -5,7 +5,7 @@ export default class ShortUrlsRepository {
     const [shortUrl] = await db('short_urls')
       .insert({
         short_code: data.shortCode,
-        full_url: data.fullUrl,
+        full_url: data.url,
         expiration_date: data.expirationDate,
         user_id: data.userId,
       })
