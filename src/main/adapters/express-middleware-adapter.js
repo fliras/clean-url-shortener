@@ -5,7 +5,7 @@ export default (middleware) => async (req, res, next) => {
   };
   const response = await middleware.handle(request);
   if (response.statusCode === 200) {
-    Object.assign(request, response.data);
+    Object.assign(req, response.data);
     next();
   } else {
     return res

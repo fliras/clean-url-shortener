@@ -2,6 +2,7 @@ export default (controller) => async (req, res) => {
   const request = {
     ...(req.body || {}),
     ...(req.params || {}),
+    userId: req.userId,
   };
   const { statusCode, ...response } = await controller.handle(request);
   if (statusCode >= 200 && statusCode <= 299) {
