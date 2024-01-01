@@ -1,27 +1,9 @@
 import LoadUserByTokenUsecase from '@/domain/usecases/load-user-by-token-usecase.js';
 import InvalidTokenError from '@/domain/errors/invalid-token-error.js';
 import UserNotFoundError from '@/domain/errors/user-not-found-error.js';
-
-class DecrypterStub {
-  result = { userId: 1 };
-
-  async decrypt() {
-    return this.result;
-  }
-}
-
-class LoadUserByIdRepositoryStub {
-  result = {
-    userId: 1,
-    username: 'user01',
-    password: 'hashed-password',
-    createdAt: new Date(),
-  };
-
-  async loadById() {
-    return this.result;
-  }
-}
+import { DecrypterStub } from '@/tests/domain/mocks/cripto.js';
+import { LoadUserByIdRepositoryStub } from '@/tests/domain/mocks/database';
+import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const decrypter = new DecrypterStub();
@@ -32,10 +14,6 @@ const makeSut = () => {
     loadUserByIdRepository,
     sut,
   };
-};
-
-const mockThrow = () => {
-  throw new Error();
 };
 
 const mockInput = () => 'access-token';

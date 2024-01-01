@@ -1,9 +1,10 @@
 import GenerateShortUrlCodeUsecase from '@/domain/usecases/generate-short-url-code-usecase.js';
-import UniqueCodeGenerator from '@/infra/cripto/unique-code-generator.js';
+import { UniqueCodeGeneratorStub } from '@/tests/domain/mocks/cripto.js';
+import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const shortCodeLength = 13;
-  const uniqueCodeGenerator = new UniqueCodeGenerator();
+  const uniqueCodeGenerator = new UniqueCodeGeneratorStub();
   const sut = new GenerateShortUrlCodeUsecase({
     shortCodeLength,
     uniqueCodeGenerator,
@@ -23,18 +24,18 @@ describe('GenerateShortUrlCodeUsecase', () => {
     expect(codeGeneratorSpy).toHaveBeenCalledWith(shortCodeLength);
   });
 
-  it('Should return a shortCode according to the specified length', async () => {
-    const { sut, shortCodeLength } = makeSut();
-    const response = await sut.handle(shortCodeLength);
-    expect(response.length).toBe(shortCodeLength);
-  });
-
   it('Should throw if UniqueCodeGenerator throws', async () => {
     const { sut, shortCodeLength, uniqueCodeGenerator } = makeSut();
-    jest.spyOn(uniqueCodeGenerator, 'generate').mockImplementationOnce(() => {
-      throw new Error();
-    });
+    jest
+      .spyOn(uniqueCodeGenerator, 'generate')
+      .mockImplementationOnce(mockThrow);
     const response = sut.handle(shortCodeLength);
     expect(response).rejects.toThrow();
+  });
+
+  it('Should return a string on success', async () => {
+    const { sut, shortCodeLength } = makeSut();
+    const response = await sut.handle(shortCodeLength);
+    expect(typeof response).toBe('string');
   });
 });

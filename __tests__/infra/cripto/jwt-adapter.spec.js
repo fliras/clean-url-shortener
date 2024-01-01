@@ -1,5 +1,6 @@
 import jwt from 'jsonwebtoken';
 import JwtAdapter from '@/infra/cripto/jwt-adapter.js';
+import { mockThrow } from '@/tests/helpers.js';
 
 jest.mock('jsonwebtoken', () => ({
   async verify() {
@@ -14,10 +15,6 @@ const makeSut = () => {
     secret,
     sut,
   };
-};
-
-const mockThrow = () => {
-  throw new Error();
 };
 
 describe('JwtAdapter', () => {

@@ -1,28 +1,11 @@
 import AddShortUrlController from '@/presentation/controllers/add-short-url-controller.js';
 import { badRequest, serverError, ok } from '@/presentation/helpers/http.js';
 import MissingParamError from '@/presentation/errors/missing-param-error.js';
-
-class GenerateShortUrlCodeUsecaseStub {
-  async handle() {
-    return 'random-short-code';
-  }
-}
-
-class AddShortUrlUsecaseStub {
-  result = {
-    id: 1,
-    shortCode: 'short-code',
-    fullUrl: 'full-url',
-    clicks: 0,
-    expirationDate: new Date(),
-    createdAt: new Date(),
-    userId: 1,
-  };
-
-  async handle() {
-    return this.result;
-  }
-}
+import {
+  GenerateShortUrlCodeUsecaseStub,
+  AddShortUrlUsecaseStub,
+} from '@/tests/presentation/mocks/short-urls.js';
+import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const generateShortUrlCodeUsecase = new GenerateShortUrlCodeUsecaseStub();
@@ -44,10 +27,6 @@ const mockRequest = () => ({
   validityInDays: new Date(),
   userId: 1,
 });
-
-const mockThrow = () => {
-  throw new Error();
-};
 
 describe('AddShortUrlController', () => {
   it('Should return badRequest if url are not provided', async () => {

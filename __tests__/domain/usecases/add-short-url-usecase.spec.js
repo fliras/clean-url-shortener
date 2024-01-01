@@ -1,32 +1,11 @@
 import AddShortUrlUsecase from '@/domain/usecases/add-short-url-usecase.js';
 import CodeAlreadyInUseError from '@/domain/errors/code-already-in-use-error.js';
-
-class CheckShortUrlByCodeRepositoryStub {
-  async checkByCode() {
-    return false;
-  }
-}
-
-class TimestampAdderStub {
-  addedTimestamp = new Date('2001-01-15');
-
-  addDays() {
-    return this.addedTimestamp;
-  }
-}
-
-class AddShortUrlRepositoryStub {
-  createdShortUrl = {
-    id: 1,
-    fullUrl: 'full-url',
-    shortCode: 'short-code',
-    expirationDate: new Date('2021-01-15'),
-  };
-
-  async add() {
-    return this.createdShortUrl;
-  }
-}
+import { mockThrow } from '@/tests/helpers.js';
+import {
+  CheckShortUrlByCodeRepositoryStub,
+  AddShortUrlRepositoryStub,
+} from '@/tests/domain/mocks/database.js';
+import { TimestampAdderStub } from '@/tests/domain/mocks/timestamp.js';
 
 const mockRequest = () => ({
   userId: 1,
@@ -34,10 +13,6 @@ const mockRequest = () => ({
   shortCode: 'short-code',
   validityInDays: 5,
 });
-
-const mockThrow = () => {
-  throw new Error();
-};
 
 const makeSut = () => {
   const checkShortUrlByCodeRepository = new CheckShortUrlByCodeRepositoryStub();

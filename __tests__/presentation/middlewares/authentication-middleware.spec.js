@@ -1,13 +1,7 @@
 import AuthenticationMiddleware from '@/presentation/middlewares/authentication-middleware';
 import { unauthorized, ok, serverError } from '@/presentation/helpers/http.js';
-
-class LoadUserByTokenUsecaseStub {
-  user = { userId: 1 };
-
-  async handle() {
-    return this.user;
-  }
-}
+import { LoadUserByTokenUsecaseStub } from '@/tests/presentation/mocks/users.js';
+import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const loadUserByTokenUsecase = new LoadUserByTokenUsecaseStub();
@@ -16,10 +10,6 @@ const makeSut = () => {
     loadUserByTokenUsecase,
     sut,
   };
-};
-
-const mockThrow = () => {
-  throw new Error();
 };
 
 const mockInput = () => ({
