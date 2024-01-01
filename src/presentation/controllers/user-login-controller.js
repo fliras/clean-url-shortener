@@ -11,6 +11,10 @@ export default class UserLoginController {
   async handle({ username, password }) {
     if (!username) return badRequest(new MissingParamError('username'));
     if (!password) return badRequest(new MissingParamError('password'));
-    await this.#userLoginUsecase.handle({ username, password });
+    const userLogin = await this.#userLoginUsecase.handle({
+      username,
+      password,
+    });
+    if (userLogin instanceof Error) return badRequest(userLogin);
   }
 }

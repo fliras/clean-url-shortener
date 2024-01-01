@@ -37,4 +37,12 @@ describe('UserLoginController', () => {
     await sut.handle(request);
     expect(userLoginSpy).toHaveBeenCalledWith(request);
   });
+
+  it('Should return badRequest if UserLoginUsecase returns an Error', async () => {
+    const { userLoginUsecase, sut } = makeSut();
+    const error = new Error('error-message');
+    jest.spyOn(userLoginUsecase, 'handle').mockResolvedValueOnce(error);
+    const output = await sut.handle(mockRequest());
+    expect(output).toEqual(badRequest(error));
+  });
 });
