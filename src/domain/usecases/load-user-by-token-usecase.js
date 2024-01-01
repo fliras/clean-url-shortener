@@ -12,7 +12,7 @@ export default class LoadUserByTokenUsecase {
 
   async handle(token) {
     const tokenPayload = await this.#decrypter.decrypt(token);
-    if (!tokenPayload) return new InvalidTokenError();
+    if (!tokenPayload?.userId) return new InvalidTokenError();
     const loadedUser = await this.#loadUserByIdRepository.loadById(
       tokenPayload.userId,
     );
