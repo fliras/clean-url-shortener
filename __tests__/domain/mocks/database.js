@@ -30,8 +30,22 @@ class LoadUserByIdRepositoryStub {
   }
 }
 
+class LoadUserByUsernameRepositoryStub {
+  result = {
+    userId: 1,
+    username: 'user01',
+    password: 'hashed-password',
+    createdAt: new Date(),
+  };
+
+  async loadByUsername() {
+    return this.result;
+  }
+}
+
 export {
   CheckShortUrlByCodeRepositoryStub,
   AddShortUrlRepositoryStub,
   LoadUserByIdRepositoryStub,
+  LoadUserByUsernameRepositoryStub,
 };
