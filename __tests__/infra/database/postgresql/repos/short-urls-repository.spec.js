@@ -20,7 +20,7 @@ const mockUserId = async () => {
 
 const mockAddParams = (userId) => ({
   shortCode: 'short-code',
-  fullUrl: 'https://www.google.com',
+  url: 'https://www.google.com',
   expirationDate: new Date(),
   userId,
 });
@@ -43,7 +43,10 @@ describe('ShortUrlsRepository', () => {
       const shortUrl = await sut.add(addParams);
       expect(shortUrl?.shortUrlId).toBeTruthy();
       expect(shortUrl).toMatchObject({
-        ...addParams,
+        shortCode: addParams.shortCode,
+        fullUrl: addParams.url,
+        expirationDate: addParams.expirationDate,
+        userId,
         clicks: 0,
       });
     });
