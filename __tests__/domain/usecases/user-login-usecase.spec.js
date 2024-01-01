@@ -11,6 +11,11 @@ const makeSut = () => {
   };
 };
 
+const mockRequest = () => ({
+  username: 'any-username',
+  password: 'any-password',
+});
+
 describe('UserLoginUsecase', () => {
   it('Should call LoadUserByUsernameRepository with the correct values', async () => {
     const { loadUserByUsernameRepository, sut } = makeSut();
@@ -18,8 +23,9 @@ describe('UserLoginUsecase', () => {
       loadUserByUsernameRepository,
       'loadByUsername',
     );
-    await sut.handle({ username: 'any-username', password: 'any-password' });
-    expect(loadUserSpy).toHaveBeenCalledWith('any-username');
+    const request = mockRequest();
+    await sut.handle(request);
+    expect(loadUserSpy).toHaveBeenCalledWith(request.username);
   });
 
   it('Should return UserNotFoundError if LoadUserByUsernameRepository returns null', async () => {
@@ -27,10 +33,7 @@ describe('UserLoginUsecase', () => {
     jest
       .spyOn(loadUserByUsernameRepository, 'loadByUsername')
       .mockResolvedValueOnce(null);
-    const output = await sut.handle({
-      username: 'any-username',
-      password: 'any-password',
-    });
+    const output = await sut.handle(mockRequest());
     expect(output).toEqual(new UserNotFoundError());
   });
 });
