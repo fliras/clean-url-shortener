@@ -3,6 +3,7 @@ import MissingParamError from '../errors/missing-param-error.js';
 
 export default class UserLoginController {
   #userLoginUsecase;
+  #REQUIRED_FIELDS = ['username', 'password'];
 
   constructor({ userLoginUsecase }) {
     this.#userLoginUsecase = userLoginUsecase;
@@ -10,8 +11,8 @@ export default class UserLoginController {
 
   async handle({ username, password }) {
     try {
-      if (!username) return badRequest(new MissingParamError('username'));
-      if (!password) return badRequest(new MissingParamError('password'));
+      const validation = this.#validateRequest({ username, password });
+      if (validation instanceof Error) return badRequest(validation);
       const result = await this.#userLoginUsecase.handle({
         username,
         password,
@@ -20,6 +21,13 @@ export default class UserLoginController {
       return ok({ token: result });
     } catch (error) {
       return serverError();
+    }
+  }
+
+  #validateRequest(request) {
+    for (const field of this.#REQUIRED_FIELDS) {
+      const fieldIsMissing = !request[field];
+      if (fieldIsMissing) return new MissingParamError(field);
     }
   }
 }
