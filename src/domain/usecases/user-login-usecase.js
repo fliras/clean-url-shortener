@@ -1,3 +1,5 @@
+import UserNotFoundError from '../errors/user-not-found-error.js';
+
 export default class UserLoginUsecase {
   #loadUserByUsernameRepository;
 
@@ -6,6 +8,8 @@ export default class UserLoginUsecase {
   }
 
   async handle({ username }) {
-    await this.#loadUserByUsernameRepository.loadByUsername(username);
+    const user =
+      await this.#loadUserByUsernameRepository.loadByUsername(username);
+    if (!user) return new UserNotFoundError();
   }
 }
