@@ -10,13 +10,13 @@ export default class AddShortUrlController {
     this.#addShortUrlUsecase = addShortUrlUsecase;
   }
 
-  async handle({ userData: { id }, body: { url, shortCode, validityInDays } }) {
+  async handle({ userId, url, shortCode, validityInDays }) {
     try {
       if (!url) return badRequest(new MissingParamError('url'));
       const newShortCode =
         shortCode || (await this.#generateShortUrlCodeUsecase.handle());
       const newShortUrl = await this.#addShortUrlUsecase.handle({
-        userId: id,
+        userId,
         url,
         shortCode: newShortCode,
         validityInDays,
