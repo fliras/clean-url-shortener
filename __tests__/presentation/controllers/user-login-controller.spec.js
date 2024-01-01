@@ -1,6 +1,6 @@
 import UserLoginController from '@/presentation/controllers/user-login-controller.js';
 import MissingParamError from '@/presentation/errors/missing-param-error.js';
-import { badRequest, serverError } from '@/presentation/helpers/http.js';
+import { badRequest, serverError, ok } from '@/presentation/helpers/http.js';
 import { UserLoginUsecaseStub } from '@/tests/presentation/mocks/users.js';
 import { mockThrow } from '@/tests/helpers.js';
 
@@ -52,5 +52,11 @@ describe('UserLoginController', () => {
     jest.spyOn(userLoginUsecase, 'handle').mockImplementationOnce(mockThrow);
     const output = await sut.handle(mockRequest());
     expect(output).toEqual(serverError());
+  });
+
+  it('Should return ok on success', async () => {
+    const { userLoginUsecase, sut } = makeSut();
+    const output = await sut.handle(mockRequest());
+    expect(output).toEqual(ok({ token: userLoginUsecase.token }));
   });
 });
