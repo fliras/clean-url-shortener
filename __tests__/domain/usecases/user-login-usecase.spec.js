@@ -1,6 +1,7 @@
 import UserLoginUsecase from '@/domain/usecases/user-login-usecase.js';
 import { LoadUserByUsernameRepositoryStub } from '@/tests/domain/mocks/database.js';
 import UserNotFoundError from '@/domain/errors/user-not-found-error.js';
+import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const loadUserByUsernameRepository = new LoadUserByUsernameRepositoryStub();
@@ -35,5 +36,14 @@ describe('UserLoginUsecase', () => {
       .mockResolvedValueOnce(null);
     const output = await sut.handle(mockRequest());
     expect(output).toEqual(new UserNotFoundError());
+  });
+
+  it('Should throw if LoadUserByUsernameRepository throws', async () => {
+    const { loadUserByUsernameRepository, sut } = makeSut();
+    jest
+      .spyOn(loadUserByUsernameRepository, 'loadByUsername')
+      .mockImplementationOnce(mockThrow);
+    const output = sut.handle(mockRequest());
+    expect(output).rejects.toThrow();
   });
 });
