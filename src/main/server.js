@@ -1,9 +1,13 @@
 import db from '../infra/database/postgresql/knexfile.js';
 import setupApp from './config/app.js';
 
+const API_PORT = process.env.API_PORT || 3000;
+
 db.raw('SELECT 1 + 1')
   .then(() => {
     const app = setupApp();
-    app.listen(3000, () => console.log('pokano krl'));
+    app.listen(API_PORT, () =>
+      console.log(`Server listening at *:${API_PORT}`),
+    );
   })
   .catch((err) => console.log(err));
