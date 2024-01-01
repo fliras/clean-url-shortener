@@ -1,4 +1,4 @@
-import { badRequest, ok, serverError } from '../helpers/http.js';
+import { badRequest, created, serverError } from '../helpers/http.js';
 import MissingParamError from '../errors/missing-param-error.js';
 
 export default class AddShortUrlController {
@@ -22,7 +22,7 @@ export default class AddShortUrlController {
         validityInDays,
       });
       if (newShortUrl instanceof Error) return badRequest(newShortUrl);
-      return ok(newShortUrl);
+      return created(newShortUrl);
     } catch (error) {
       return serverError();
     }

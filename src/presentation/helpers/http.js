@@ -6,6 +6,11 @@ const ok = (data) => ({
   data,
 });
 
+const created = (data) => ({
+  statusCode: 201,
+  data,
+});
+
 const badRequest = (error) => ({
   statusCode: 400,
   data: error,
@@ -21,4 +26,4 @@ const serverError = () => ({
   data: new ServerError(),
 });
 
-export { ok, badRequest, unauthorized, serverError };
+export { ok, created, badRequest, unauthorized, serverError };

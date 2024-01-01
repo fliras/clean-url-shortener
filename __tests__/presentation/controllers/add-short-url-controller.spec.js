@@ -1,5 +1,9 @@
 import AddShortUrlController from '@/presentation/controllers/add-short-url-controller.js';
-import { badRequest, serverError, ok } from '@/presentation/helpers/http.js';
+import {
+  badRequest,
+  serverError,
+  created,
+} from '@/presentation/helpers/http.js';
 import MissingParamError from '@/presentation/errors/missing-param-error.js';
 import {
   GenerateShortUrlCodeUsecaseStub,
@@ -79,9 +83,9 @@ describe('AddShortUrlController', () => {
     expect(response).toEqual(serverError());
   });
 
-  it('Should return ok on success', async () => {
+  it('Should return created on success', async () => {
     const { sut, addShortUrlUsecase } = makeSut();
     const response = await sut.handle(mockRequest());
-    expect(response).toEqual(ok(addShortUrlUsecase.result));
+    expect(response).toEqual(created(addShortUrlUsecase.result));
   });
 });
