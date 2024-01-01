@@ -3,7 +3,7 @@ import db from '../knexfile.js';
 export default class UsersRepository {
   async loadById(userId) {
     const user = await db('users').first().where({ user_id: userId });
-    return this.#map(user);
+    return user && this.#map(user);
   }
 
   #map(user) {
