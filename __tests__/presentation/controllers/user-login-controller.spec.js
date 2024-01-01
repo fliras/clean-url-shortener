@@ -8,4 +8,10 @@ describe('UserLoginController', () => {
     const output = await sut.handle({ password: 'any-password' });
     expect(output).toEqual(badRequest(new MissingParamError('username')));
   });
+
+  it('Should return badRequest if password is not provided', async () => {
+    const sut = new UserLoginController();
+    const output = await sut.handle({ username: 'any-username' });
+    expect(output).toEqual(badRequest(new MissingParamError('password')));
+  });
 });
