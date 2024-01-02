@@ -38,13 +38,7 @@ git clone https://github.com/fliras/clean-url-shortener.git
 npm install
 ```
 
-3. Preparar o projeto:
-
-```
-npm run prepare
-```
-
-4. Iniciar o container do Banco de Dados:
+3. Iniciar o container do Banco de Dados:
 
 ```
 npm run db:up
@@ -52,6 +46,14 @@ npm run db:up
 Obs:
 - É necessário instalar o Docker previamente;
 - O banco de dados utilizado é PostgreSQL;
+```
+
+4. Preparar o projeto:
+
+```
+npm run prepare
+
+obs: serão configurados o husky e as migrations do bd
 ```
 
 5. Iniciar a API (modo de desenvolvimento):
@@ -65,6 +67,9 @@ npm run dev
 ```
 // finaliza o container do bd
 npm run db:down
+
+// executar as migrations do banco de dados
+npm run migrate
 
 // executa todos os testes unitários
 npm run test
