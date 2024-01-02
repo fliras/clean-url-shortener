@@ -2,6 +2,7 @@ import UserLoginUsecase from '@/domain/usecases/user-login-usecase.js';
 import { LoadUserByUsernameRepositoryStub } from '@/tests/domain/mocks/database.js';
 import { HashComparerStub } from '@/tests/domain/mocks/cripto.js';
 import UserNotFoundError from '@/domain/errors/user-not-found-error.js';
+import InvalidLoginError from '@/domain/errors/invalid-login-error.js';
 import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
@@ -71,5 +72,12 @@ describe('UserLoginUsecase', () => {
     jest.spyOn(hashComparer, 'compare').mockImplementationOnce(mockThrow);
     const output = sut.handle(mockRequest());
     expect(output).rejects.toThrow();
+  });
+
+  it('Should return InvalidLoginError if hashComparer returns false', async () => {
+    const { hashComparer, sut } = makeSut();
+    jest.spyOn(hashComparer, 'compare').mockResolvedValueOnce(false);
+    const output = await sut.handle(mockRequest());
+    expect(output).toEqual(new InvalidLoginError());
   });
 });

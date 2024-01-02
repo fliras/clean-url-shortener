@@ -1,4 +1,5 @@
 import UserNotFoundError from '../errors/user-not-found-error.js';
+import InvalidLoginError from '../errors/invalid-login-error.js';
 
 export default class UserLoginUsecase {
   #loadUserByUsernameRepository;
@@ -13,6 +14,10 @@ export default class UserLoginUsecase {
     const user =
       await this.#loadUserByUsernameRepository.loadByUsername(username);
     if (!user) return new UserNotFoundError();
-    await this.#hashComparer.compare(password, user.password);
+    const isPasswordValid = await this.#hashComparer.compare(
+      password,
+      user.password,
+    );
+    if (!isPasswordValid) return new InvalidLoginError();
   }
 }
