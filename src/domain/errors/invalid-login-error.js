@@ -1,6 +1,6 @@
 export default class InvalidLoginError extends Error {
   constructor() {
-    super('Invalid Login');
+    super('Invalid login');
     this.name = 'InvalidLoginError';
   }
 }
