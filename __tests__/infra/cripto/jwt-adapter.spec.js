@@ -2,13 +2,16 @@ import jwt from 'jsonwebtoken';
 import JwtAdapter from '@/infra/cripto/jwt-adapter.js';
 import { mockThrow } from '@/tests/helpers.js';
 
+const MOCKED_PAYLOAD = 'payload';
+const MOCKED_TOKEN = 'any-token';
+
 jest.mock('jsonwebtoken', () => ({
   async verify() {
-    return 'payload';
+    return MOCKED_PAYLOAD;
   },
 
   async sign() {
-    return 'any-token';
+    return MOCKED_TOKEN;
   },
 }));
 
@@ -26,9 +29,8 @@ describe('JwtAdapter', () => {
     it('Should call jwt.verify with correct values', async () => {
       const decryptSpy = jest.spyOn(jwt, 'verify');
       const { secret, sut } = makeSut();
-      const token = 'token';
-      await sut.decrypt(token);
-      expect(decryptSpy).toHaveBeenCalledWith(token, secret);
+      await sut.decrypt(MOCKED_TOKEN);
+      expect(decryptSpy).toHaveBeenCalledWith(MOCKED_TOKEN, secret);
     });
 
     it('Should throw if jwt.verify throws', async () => {
@@ -40,9 +42,8 @@ describe('JwtAdapter', () => {
 
     it('Should return a payload on success', async () => {
       const { sut } = makeSut();
-      const token = 'token';
-      const output = await sut.decrypt(token);
-      expect(output).toBe('payload');
+      const output = await sut.decrypt(MOCKED_TOKEN);
+      expect(output).toBe(MOCKED_PAYLOAD);
     });
   });
 
@@ -50,21 +51,21 @@ describe('JwtAdapter', () => {
     it('Should call jwt.sign with the correct values', async () => {
       const { secret, sut } = makeSut();
       const jwtSpy = jest.spyOn(jwt, 'sign');
-      await sut.encrypt('payload');
-      expect(jwtSpy).toHaveBeenCalledWith('payload', secret);
+      await sut.encrypt(MOCKED_PAYLOAD);
+      expect(jwtSpy).toHaveBeenCalledWith(MOCKED_PAYLOAD, secret);
     });
 
     it('Should throw if jwt.sign throws', async () => {
       const { sut } = makeSut();
       jest.spyOn(jwt, 'sign').mockImplementationOnce(mockThrow);
-      const output = sut.encrypt('payload');
+      const output = sut.encrypt(MOCKED_PAYLOAD);
       expect(output).rejects.toThrow();
     });
 
     it('Should return a token on success', async () => {
       const { sut } = makeSut();
-      const output = await sut.encrypt('payload');
-      expect(output).toBe('any-token');
+      const output = await sut.encrypt(MOCKED_PAYLOAD);
+      expect(output).toBe(MOCKED_TOKEN);
     });
   });
 });
