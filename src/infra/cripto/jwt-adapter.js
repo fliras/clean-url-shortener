@@ -13,6 +13,7 @@ export default class JwtAdapter {
   }
 
   async encrypt(payload) {
-    jwt.sign(payload, this.#secret);
+    const token = jwt.sign(payload, this.#secret);
+    return token;
   }
 }

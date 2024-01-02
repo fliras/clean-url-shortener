@@ -60,5 +60,11 @@ describe('JwtAdapter', () => {
       const output = sut.encrypt('payload');
       expect(output).rejects.toThrow();
     });
+
+    it('Should return a token on success', async () => {
+      const { sut } = makeSut();
+      const output = await sut.encrypt('payload');
+      expect(output).toBe('any-token');
+    });
   });
 });
