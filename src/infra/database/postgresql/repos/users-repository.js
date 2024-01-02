@@ -6,6 +6,11 @@ export default class UsersRepository {
     return user && this.#map(user);
   }
 
+  async loadByUsername(username) {
+    const user = await db('users').first().where({ username });
+    return user && this.#map(user);
+  }
+
   #map(user) {
     return {
       userId: user.user_id,

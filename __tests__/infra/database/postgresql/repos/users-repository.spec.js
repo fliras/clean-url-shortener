@@ -39,4 +39,19 @@ describe('UsersRepository', () => {
       });
     });
   });
+
+  describe('loadByUsername()', () => {
+    it('Should return an user on success', async () => {
+      const { sut } = makeSut();
+      const mockedUser = await mockUser();
+      const output = await sut.loadByUsername(mockedUser.username);
+      expect(output).toBeTruthy();
+      expect(output).toEqual({
+        userId: mockedUser.user_id,
+        username: mockedUser.username,
+        password: mockedUser.password,
+        createdAt: mockedUser.created_at,
+      });
+    });
+  });
 });
