@@ -5,7 +5,10 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "db:up": "docker-compose -f docker/docker-compose.yml up -d",
+    "db:down": "docker-compose -f docker/docker-compose.yml down",
     "dev": "nodemon src/main/server.js",
+    "prepare": "husky install",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm t -- --watch",
     "test:staged": "npm t -- --findRelatedTests",
