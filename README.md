@@ -51,7 +51,7 @@ Obs:
 4. Preparar o projeto:
 
 ```
-npm run prepare
+npm run config
 
 obs: serão configurados o husky e as migrations do bd
 ```

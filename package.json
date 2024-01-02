@@ -9,7 +9,7 @@
     "db:down": "docker-compose -f docker/docker-compose.yml down",
     "dev": "nodemon src/main/server.js",
     "migrate": "knex --knexfile=./src/infra/database/postgresql/knexfile migrate:latest",
-    "prepare": "husky install && npm run migrate",
+    "config": "husky install && npm run migrate",
     "test": "jest --passWithNoTests --no-cache --runInBand",
     "test:watch": "npm t -- --watch",
     "test:staged": "npm t -- --findRelatedTests",
