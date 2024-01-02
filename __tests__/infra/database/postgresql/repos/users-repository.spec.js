@@ -1,4 +1,4 @@
-import db from '@/infra/database/postgresql/knexfile.js';
+import db from '@/infra/database/postgresql/db.js';
 import UsersRepository from '@/infra/database/postgresql/repos/users-repository';
 
 const makeSut = () => ({

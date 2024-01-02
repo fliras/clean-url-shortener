@@ -1,4 +1,4 @@
-import db from '../knexfile.js';
+import db from '../db.js';
 
 export default class UsersRepository {
   async loadById(userId) {

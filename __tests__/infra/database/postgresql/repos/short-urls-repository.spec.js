@@ -1,4 +1,4 @@
-import db from '@/infra/database/postgresql/knexfile.js';
+import db from '@/infra/database/postgresql/db.js';
 import ShortUrlsRepository from '@/infra/database/postgresql/repos/short-urls-repository.js';
 
 const makeSut = () => {
