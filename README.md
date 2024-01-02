@@ -20,6 +20,10 @@ Aplicar, através de uma ideia simples, os conceitos da Clean Architecture e pri
 - Eslint & Prettier
 - Commitlint
 
+## Documentação
+
+Para compreender em detalhes o funcionamento da API, [verifique a documentação](./docs/index.md).
+
 ## Como Começar?
 
 1. Clonar o repositório:
