@@ -20,9 +20,9 @@ class HashComparerStub {
 }
 
 class EncrypterStub {
-  token = 'any-token';
+  result = 'any-token';
   async encrypt() {
-    return this.token;
+    return this.result;
   }
 }
 

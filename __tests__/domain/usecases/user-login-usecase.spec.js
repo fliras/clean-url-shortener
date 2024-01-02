@@ -101,4 +101,10 @@ describe('UserLoginUsecase', () => {
     const output = sut.handle(mockRequest());
     expect(output).rejects.toThrow();
   });
+
+  it('Should return a token on success', async () => {
+    const { sut, encrypter } = makeSut();
+    const output = await sut.handle(mockRequest());
+    expect(output).toBe(encrypter.result);
+  });
 });

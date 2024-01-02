@@ -21,6 +21,7 @@ export default class UserLoginUsecase {
       user.password,
     );
     if (!isPasswordValid) return new InvalidLoginError();
-    await this.#encrypter.encrypt({ userId: user.userId });
+    const token = await this.#encrypter.encrypt({ userId: user.userId });
+    return token;
   }
 }
