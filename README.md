@@ -46,6 +46,8 @@ npm run db:up
 Obs:
 - É necessário instalar o Docker previamente;
 - O banco de dados utilizado é PostgreSQL;
+- Para acessar o banco de dados, abra o pgadmin em http://localhost:8080
+- o usuário e senha para acesso estão disponíveis no docker file
 ```
 
 4. Preparar o projeto:
