@@ -4,10 +4,12 @@ import InvalidLoginError from '../errors/invalid-login-error.js';
 export default class UserLoginUsecase {
   #loadUserByUsernameRepository;
   #hashComparer;
+  #encrypter;
 
-  constructor({ loadUserByUsernameRepository, hashComparer }) {
+  constructor({ loadUserByUsernameRepository, hashComparer, encrypter }) {
     this.#loadUserByUsernameRepository = loadUserByUsernameRepository;
     this.#hashComparer = hashComparer;
+    this.#encrypter = encrypter;
   }
 
   async handle({ username, password }) {
@@ -19,5 +21,6 @@ export default class UserLoginUsecase {
       user.password,
     );
     if (!isPasswordValid) return new InvalidLoginError();
+    await this.#encrypter.encrypt({ userId: user.userId });
   }
 }

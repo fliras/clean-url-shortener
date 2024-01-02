@@ -19,4 +19,16 @@ class HashComparerStub {
   }
 }
 
-export { UniqueCodeGeneratorStub, DecrypterStub, HashComparerStub };
+class EncrypterStub {
+  token = 'any-token';
+  async encrypt() {
+    return this.token;
+  }
+}
+
+export {
+  UniqueCodeGeneratorStub,
+  DecrypterStub,
+  HashComparerStub,
+  EncrypterStub,
+};

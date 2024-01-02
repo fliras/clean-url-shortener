@@ -1,20 +1,26 @@
 import UserLoginUsecase from '@/domain/usecases/user-login-usecase.js';
 import { LoadUserByUsernameRepositoryStub } from '@/tests/domain/mocks/database.js';
-import { HashComparerStub } from '@/tests/domain/mocks/cripto.js';
 import UserNotFoundError from '@/domain/errors/user-not-found-error.js';
 import InvalidLoginError from '@/domain/errors/invalid-login-error.js';
 import { mockThrow } from '@/tests/helpers.js';
+import {
+  HashComparerStub,
+  EncrypterStub,
+} from '@/tests/domain/mocks/cripto.js';
 
 const makeSut = () => {
   const loadUserByUsernameRepository = new LoadUserByUsernameRepositoryStub();
   const hashComparer = new HashComparerStub();
+  const encrypter = new EncrypterStub();
   const sut = new UserLoginUsecase({
     loadUserByUsernameRepository,
     hashComparer,
+    encrypter,
   });
   return {
     loadUserByUsernameRepository,
     hashComparer,
+    encrypter,
     sut,
   };
 };
@@ -79,5 +85,13 @@ describe('UserLoginUsecase', () => {
     jest.spyOn(hashComparer, 'compare').mockResolvedValueOnce(false);
     const output = await sut.handle(mockRequest());
     expect(output).toEqual(new InvalidLoginError());
+  });
+
+  it('Should call encrypter with the correct values', async () => {
+    const { encrypter, loadUserByUsernameRepository, sut } = makeSut();
+    const encrypterSpy = jest.spyOn(encrypter, 'encrypt');
+    await sut.handle(mockRequest());
+    const { userId } = loadUserByUsernameRepository.result;
+    expect(encrypterSpy).toHaveBeenCalledWith({ userId });
   });
 });
