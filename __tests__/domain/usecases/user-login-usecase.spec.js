@@ -65,4 +65,11 @@ describe('UserLoginUsecase', () => {
       hashedPassword,
     );
   });
+
+  it('Should throw if hashComparer throws', async () => {
+    const { hashComparer, sut } = makeSut();
+    jest.spyOn(hashComparer, 'compare').mockImplementationOnce(mockThrow);
+    const output = sut.handle(mockRequest());
+    expect(output).rejects.toThrow();
+  });
 });
