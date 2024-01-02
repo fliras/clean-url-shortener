@@ -1,7 +1,9 @@
 export default (middleware) => async (req, res, next) => {
+  const headers = req.headers || {};
+  const accessToken = headers.authorization?.split(' ')[1]; // authorization: Basic <token>
   const request = {
-    ...(req.headers || {}),
-    accessToken: req.headers?.['x-access-token'],
+    ...headers,
+    accessToken,
   };
   const response = await middleware.handle(request);
   if (response.statusCode === 200) {
