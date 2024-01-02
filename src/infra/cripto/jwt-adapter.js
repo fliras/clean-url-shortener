@@ -11,4 +11,8 @@ export default class JwtAdapter {
     const payload = jwt.verify(cipherText, this.#secret);
     return payload;
   }
+
+  async encrypt(payload) {
+    jwt.sign(payload, this.#secret);
+  }
 }
