@@ -53,5 +53,12 @@ describe('JwtAdapter', () => {
       await sut.encrypt('payload');
       expect(jwtSpy).toHaveBeenCalledWith('payload', secret);
     });
+
+    it('Should throw if jwt.sign throws', async () => {
+      const { sut } = makeSut();
+      jest.spyOn(jwt, 'sign').mockImplementationOnce(mockThrow);
+      const output = sut.encrypt('payload');
+      expect(output).rejects.toThrow();
+    });
   });
 });
