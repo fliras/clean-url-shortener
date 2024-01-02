@@ -24,4 +24,19 @@ describe('BcryptAdapter', () => {
     const output = sut.compare(...input);
     expect(output).rejects.toThrow();
   });
+
+  describe('Should return a boolean on success', () => {
+    it('when bcrypt.compare returns false', async () => {
+      const sut = new BcryptAdapter();
+      jest.spyOn(bcrypt, 'compare').mockResolvedValueOnce(false);
+      const output = await sut.compare(...input);
+      expect(output).toBe(false);
+    });
+
+    it('when bcrypt.compare returns true', async () => {
+      const sut = new BcryptAdapter();
+      const output = await sut.compare(...input);
+      expect(output).toBe(true);
+    });
+  });
 });
