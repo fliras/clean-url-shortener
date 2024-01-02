@@ -13,4 +13,10 @@ class DecrypterStub {
   }
 }
 
-export { UniqueCodeGeneratorStub, DecrypterStub };
+class HashComparerStub {
+  async compare() {
+    return true;
+  }
+}
+
+export { UniqueCodeGeneratorStub, DecrypterStub, HashComparerStub };

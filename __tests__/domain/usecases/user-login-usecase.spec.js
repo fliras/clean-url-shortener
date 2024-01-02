@@ -1,13 +1,19 @@
 import UserLoginUsecase from '@/domain/usecases/user-login-usecase.js';
 import { LoadUserByUsernameRepositoryStub } from '@/tests/domain/mocks/database.js';
+import { HashComparerStub } from '@/tests/domain/mocks/cripto.js';
 import UserNotFoundError from '@/domain/errors/user-not-found-error.js';
 import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const loadUserByUsernameRepository = new LoadUserByUsernameRepositoryStub();
-  const sut = new UserLoginUsecase({ loadUserByUsernameRepository });
+  const hashComparer = new HashComparerStub();
+  const sut = new UserLoginUsecase({
+    loadUserByUsernameRepository,
+    hashComparer,
+  });
   return {
     loadUserByUsernameRepository,
+    hashComparer,
     sut,
   };
 };
@@ -45,5 +51,18 @@ describe('UserLoginUsecase', () => {
       .mockImplementationOnce(mockThrow);
     const output = sut.handle(mockRequest());
     expect(output).rejects.toThrow();
+  });
+
+  it('Should call hashComparer with the correct values', async () => {
+    const { hashComparer, loadUserByUsernameRepository, sut } = makeSut();
+    const hashComparerSpy = jest.spyOn(hashComparer, 'compare');
+    const request = mockRequest();
+    await sut.handle(request);
+    const plaintextPassword = request.password;
+    const hashedPassword = loadUserByUsernameRepository.result.password;
+    expect(hashComparerSpy).toHaveBeenCalledWith(
+      plaintextPassword,
+      hashedPassword,
+    );
   });
 });
