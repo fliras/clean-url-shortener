@@ -14,7 +14,8 @@ export default class ShortUrlsRepository {
   }
 
   async loadByCode(code) {
-    return await db('short_urls').first().where({ short_code: code });
+    const shortUrl = await db('short_urls').first().where({ short_code: code });
+    return shortUrl && this.#map(shortUrl);
   }
 
   async checkByCode(code) {

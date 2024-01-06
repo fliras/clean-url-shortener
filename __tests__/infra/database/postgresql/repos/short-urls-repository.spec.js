@@ -82,7 +82,14 @@ describe('ShortUrlsRepository', () => {
       const { sut } = makeSut();
       const mockedShortUrl = await mockShortUrl();
       const loadedShortUrl = await sut.loadByCode(mockedShortUrl.short_code);
-      expect(loadedShortUrl).toEqual(mockedShortUrl);
+      expect(loadedShortUrl).toMatchObject({
+        shortUrlId: mockedShortUrl.short_url_id,
+        shortCode: mockedShortUrl.short_code,
+        fullUrl: mockedShortUrl.full_url,
+        expirationDate: mockedShortUrl.expiration_date,
+        userId: mockedShortUrl.user_id,
+        clicks: mockedShortUrl.clicks,
+      });
     });
   });
 
