@@ -22,6 +22,14 @@ export default class ShortUrlsRepository {
     return shortUrl !== undefined;
   }
 
+  async incrementClicks(code) {
+    const [shortUrl] = await db('short_urls')
+      .increment('clicks', 1)
+      .where({ short_code: code })
+      .returning('*');
+    return shortUrl && this.#map(shortUrl);
+  }
+
   #map(shortUrl) {
     return {
       shortUrlId: shortUrl.short_url_id,

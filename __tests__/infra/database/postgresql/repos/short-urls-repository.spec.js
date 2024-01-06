@@ -60,7 +60,7 @@ describe('ShortUrlsRepository', () => {
     });
   });
 
-  describe('checkByCode', () => {
+  describe('checkByCode()', () => {
     it('Should return true if short url exists', async () => {
       const { sut } = makeSut();
       const userId = await mockUserId();
@@ -77,12 +77,21 @@ describe('ShortUrlsRepository', () => {
     });
   });
 
-  describe('loadByCode', () => {
+  describe('loadByCode()', () => {
     it('Should return a short url if it exists', async () => {
       const { sut } = makeSut();
       const mockedShortUrl = await mockShortUrl();
       const loadedShortUrl = await sut.loadByCode(mockedShortUrl.short_code);
       expect(loadedShortUrl).toEqual(mockedShortUrl);
+    });
+  });
+
+  describe('incrementClicks()', () => {
+    it('Should increment the clicks of a short url', async () => {
+      const { sut } = makeSut();
+      const mockedShortUrl = await mockShortUrl();
+      const newShortUrl = await sut.incrementClicks(mockedShortUrl.short_code);
+      expect(newShortUrl.clicks).toBe(mockedShortUrl.clicks + 1);
     });
   });
 });
