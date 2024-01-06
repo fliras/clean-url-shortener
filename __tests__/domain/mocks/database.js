@@ -59,10 +59,15 @@ class LoadShortUrlByCodeRepositoryStub {
   }
 }
 
+class IncrementShortUrlClicksRepositoryStub {
+  async incrementClicks() {}
+}
+
 export {
   CheckShortUrlByCodeRepositoryStub,
   AddShortUrlRepositoryStub,
   LoadUserByIdRepositoryStub,
   LoadUserByUsernameRepositoryStub,
   LoadShortUrlByCodeRepositoryStub,
+  IncrementShortUrlClicksRepositoryStub,
 };
