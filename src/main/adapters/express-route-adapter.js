@@ -5,9 +5,9 @@ export default (controller) => async (req, res) => {
     userId: req.userId,
   };
   const { statusCode, ...response } = await controller.handle(request);
-  if (statusCode >= 200 && statusCode <= 299) {
+  if (statusCode >= 200 && statusCode <= 299)
     return res.status(statusCode).json(response.data);
-  } else {
-    return res.status(statusCode).json({ error: response.data.message });
-  }
+  if (statusCode >= 300 && statusCode <= 399)
+    return res.status(statusCode).redirect(response.data);
+  return res.status(statusCode).json({ error: response.data.message });
 };
