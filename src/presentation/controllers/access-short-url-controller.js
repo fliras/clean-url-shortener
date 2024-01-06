@@ -15,7 +15,7 @@ export default class AccessShortUrlController {
       if (!shortCode) return badRequest(new MissingParamError('shortCode'));
       const shortUrl = await this.#loadShortUrlByCodeUsecase.handle(shortCode);
       if (shortUrl instanceof Error) return badRequest(shortUrl);
-      await this.#incrementShortUrlClicksUsecase.handle();
+      await this.#incrementShortUrlClicksUsecase.handle(shortCode);
       return redirect(shortUrl.fullUrl);
     } catch (error) {
       return serverError();

@@ -63,14 +63,15 @@ describe('AccessShortUrlController', () => {
     expect(output).toEqual(serverError());
   });
 
-  it('Should call incrementShortUrlClicksUsecase', async () => {
+  it('Should call incrementShortUrlClicksUsecase with correct values', async () => {
     const { incrementShortUrlClicksUsecase, sut } = makeSut();
     const incrementShortUrlSpy = jest.spyOn(
       incrementShortUrlClicksUsecase,
       'handle',
     );
-    await sut.handle(mockRequest());
-    expect(incrementShortUrlSpy).toHaveBeenCalled();
+    const request = mockRequest();
+    await sut.handle(request);
+    expect(incrementShortUrlSpy).toHaveBeenCalledWith(request.shortCode);
   });
 
   it('Should return serverError if incrementShortUrlClicksUsecase throws', async () => {
