@@ -13,10 +13,20 @@ const makeSut = () => {
   };
 };
 
-describe('LoadShortUrlByCodeUsecase', () => {
-  const ONE_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
-  const MOCKED_TIMESTAMP = new Date(new Date() - ONE_DAY_IN_MILLISECONDS);
+const mockInput = () => 'any-code';
 
+const ONE_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
+const MOCKED_TIMESTAMP = new Date();
+
+const mockExpiredShortUrl = (shortUrl) => {
+  const expiredTimestamp = new Date(MOCKED_TIMESTAMP - ONE_DAY_IN_MILLISECONDS);
+  return {
+    ...shortUrl,
+    expirationDate: expiredTimestamp,
+  };
+};
+
+describe('LoadShortUrlByCodeUsecase', () => {
   beforeAll(() => {
     jest.useFakeTimers('modern');
     jest.setSystemTime(MOCKED_TIMESTAMP);
@@ -32,8 +42,8 @@ describe('LoadShortUrlByCodeUsecase', () => {
       loadShortUrlByCodeRepository,
       'loadByCode',
     );
-    await sut.handle('any-code');
-    expect(loadShortUrlSpy).toHaveBeenCalledWith('any-code');
+    await sut.handle(mockInput());
+    expect(loadShortUrlSpy).toHaveBeenCalledWith(mockInput());
   });
 
   it('Should return ShortUrlNotFound if loadShortUrlByCodeRepository returns null', async () => {
@@ -41,22 +51,19 @@ describe('LoadShortUrlByCodeUsecase', () => {
     jest
       .spyOn(loadShortUrlByCodeRepository, 'loadByCode')
       .mockResolvedValueOnce(null);
-    const output = await sut.handle('any-code');
+    const output = await sut.handle(mockInput());
     expect(output).toEqual(new ShortUrlNotFoundError());
   });
 
   it('Should return ExpiredShortUrlError if the short url is expired', async () => {
     const { loadShortUrlByCodeRepository, sut } = makeSut();
-    const expiredTimestamp = new Date(
-      MOCKED_TIMESTAMP - ONE_DAY_IN_MILLISECONDS,
+    const expiredShortUrl = mockExpiredShortUrl(
+      loadShortUrlByCodeRepository.result,
     );
     jest
       .spyOn(loadShortUrlByCodeRepository, 'loadByCode')
-      .mockResolvedValueOnce({
-        ...loadShortUrlByCodeRepository.result,
-        expirationDate: expiredTimestamp,
-      });
-    const output = await sut.handle('any-code');
+      .mockResolvedValueOnce(expiredShortUrl);
+    const output = await sut.handle(mockInput());
     expect(output).toEqual(new ExpiredShortUrlError());
   });
 
@@ -65,13 +72,13 @@ describe('LoadShortUrlByCodeUsecase', () => {
     jest
       .spyOn(loadShortUrlByCodeRepository, 'loadByCode')
       .mockImplementationOnce(mockThrow);
-    const output = sut.handle('any-code');
+    const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
   });
 
   it('Should return an short url on success', async () => {
     const { loadShortUrlByCodeRepository, sut } = makeSut();
-    const output = await sut.handle('any-code');
+    const output = await sut.handle(mockInput());
     expect(output).toEqual(loadShortUrlByCodeRepository.result);
   });
 });
