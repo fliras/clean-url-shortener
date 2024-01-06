@@ -26,6 +26,10 @@ const makeSut = () => {
   };
 };
 
+const mockRequest = () => ({
+  shortCode: 'any-code',
+});
+
 describe('AccessShortUrlController', () => {
   it('Should return badRequest if shortCode is not provided', async () => {
     const { sut } = makeSut();
@@ -36,7 +40,7 @@ describe('AccessShortUrlController', () => {
   it('Should call loadShortUrlByCodeUsecase with correct values', async () => {
     const { loadShortUrlByCodeUsecase, sut } = makeSut();
     const loadShortUrlSpy = jest.spyOn(loadShortUrlByCodeUsecase, 'handle');
-    await sut.handle({ shortCode: 'any-code' });
+    await sut.handle(mockRequest());
     expect(loadShortUrlSpy).toHaveBeenCalledWith('any-code');
   });
 
@@ -46,7 +50,7 @@ describe('AccessShortUrlController', () => {
     jest
       .spyOn(loadShortUrlByCodeUsecase, 'handle')
       .mockResolvedValueOnce(error);
-    const output = await sut.handle({ shortCode: 'any-code' });
+    const output = await sut.handle(mockRequest());
     expect(output).toEqual(badRequest(error));
   });
 
@@ -55,7 +59,7 @@ describe('AccessShortUrlController', () => {
     jest
       .spyOn(loadShortUrlByCodeUsecase, 'handle')
       .mockImplementationOnce(mockThrow);
-    const output = await sut.handle({ shortCode: 'any-code' });
+    const output = await sut.handle(mockRequest());
     expect(output).toEqual(serverError());
   });
 
@@ -65,7 +69,7 @@ describe('AccessShortUrlController', () => {
       incrementShortUrlClicksUsecase,
       'handle',
     );
-    await sut.handle({ shortCode: 'any-code' });
+    await sut.handle(mockRequest());
     expect(incrementShortUrlSpy).toHaveBeenCalled();
   });
 
@@ -74,13 +78,13 @@ describe('AccessShortUrlController', () => {
     jest
       .spyOn(incrementShortUrlClicksUsecase, 'handle')
       .mockImplementationOnce(mockThrow);
-    const output = await sut.handle({ shortCode: 'any-code' });
+    const output = await sut.handle(mockRequest());
     expect(output).toEqual(serverError());
   });
 
   it('Should return redirect on success', async () => {
     const { loadShortUrlByCodeUsecase, sut } = makeSut();
-    const output = await sut.handle({ shortCode: 'any-code' });
+    const output = await sut.handle(mockRequest());
     const expectedOutput = loadShortUrlByCodeUsecase.result.fullUrl;
     expect(output).toEqual(redirect(expectedOutput));
   });
