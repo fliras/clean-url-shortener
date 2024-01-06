@@ -1,4 +1,4 @@
-import db from '../infra/database/postgresql/knexfile.js';
+import db from '../infra/database/postgresql/db.js';
 import setupApp from './config/app.js';
 
 const API_PORT = process.env.API_PORT || 3000;
