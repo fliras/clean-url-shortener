@@ -6,5 +6,5 @@ export default (app) => {
   const router = Router();
   setupShortUrls(router);
   setupUsers(router);
-  app.use('/api', router);
+  app.use(router);
 };

@@ -10,8 +10,5 @@ export default (router) => {
     adaptRoute(makeAddShortUrlController()),
   );
 
-  router.get(
-    '/short-urls/:shortCode',
-    adaptRoute(makeAccessShortUrlController()),
-  );
+  router.get('/:shortCode', adaptRoute(makeAccessShortUrlController()));
 };
