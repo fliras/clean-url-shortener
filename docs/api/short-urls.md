@@ -2,7 +2,7 @@
 
 ## Criação de URLs encurtadas
 
-> /api/short-urls POST
+> /short-urls POST
 
 Obs: _Apenas usuários autenticados_ podem criar URLs encurtadas.
 

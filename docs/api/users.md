@@ -2,7 +2,7 @@
 
 ## Login de usuários
 
-> /api/users/login POST
+> /users/login POST
 
 ### Entrada:
 
