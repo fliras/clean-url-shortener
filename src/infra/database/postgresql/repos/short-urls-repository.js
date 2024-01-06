@@ -18,6 +18,10 @@ export default class ShortUrlsRepository {
     return shortUrl !== undefined;
   }
 
+  async loadByCode(code) {
+    return await db('short_urls').first().where({ short_code: code });
+  }
+
   #map(shortUrl) {
     return {
       shortUrlId: shortUrl.short_url_id,

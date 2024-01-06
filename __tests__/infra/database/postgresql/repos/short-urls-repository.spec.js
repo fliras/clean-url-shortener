@@ -25,6 +25,14 @@ const mockAddParams = (userId) => ({
   userId,
 });
 
+const mockShortUrl = async () => {
+  const userId = await mockUserId();
+  const [shortUrl] = await db('short_urls')
+    .insert({ short_code: 'any-code', full_url: 'any-url', user_id: userId })
+    .returning('*');
+  return shortUrl;
+};
+
 describe('ShortUrlsRepository', () => {
   beforeEach(async () => {
     await db('short_urls').del();
@@ -66,6 +74,15 @@ describe('ShortUrlsRepository', () => {
       const { sut } = makeSut();
       const shortUrlExists = await sut.checkByCode('random-short-code');
       expect(shortUrlExists).toBe(false);
+    });
+  });
+
+  describe('loadByCode', () => {
+    it('Should return a short url if it exists', async () => {
+      const { sut } = makeSut();
+      const mockedShortUrl = await mockShortUrl();
+      const loadedShortUrl = await sut.loadByCode(mockedShortUrl.short_code);
+      expect(loadedShortUrl).toEqual(mockedShortUrl);
     });
   });
 });
