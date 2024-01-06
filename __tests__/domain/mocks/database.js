@@ -43,9 +43,26 @@ class LoadUserByUsernameRepositoryStub {
   }
 }
 
+class LoadShortUrlByCodeRepositoryStub {
+  result = {
+    shortUrlId: 1,
+    shortCode: 'any-code',
+    fullUrl: 'any-url',
+    Clicks: 0,
+    ExpirationDate: new Date(),
+    CreatedAt: new Date(),
+    userId: 1,
+  };
+
+  async loadByCode() {
+    return this.result;
+  }
+}
+
 export {
   CheckShortUrlByCodeRepositoryStub,
   AddShortUrlRepositoryStub,
   LoadUserByIdRepositoryStub,
   LoadUserByUsernameRepositoryStub,
+  LoadShortUrlByCodeRepositoryStub,
 };
