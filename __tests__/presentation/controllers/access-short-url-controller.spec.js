@@ -1,7 +1,8 @@
 import AccessShortUrlController from '@/presentation/controllers/access-short-url-controller.js';
-import { badRequest } from '@/presentation/helpers/http.js';
+import { badRequest, serverError } from '@/presentation/helpers/http.js';
 import MissingParamError from '@/presentation/errors/missing-param-error.js';
 import { LoadShortUrlByCodeUsecaseStub } from '@/tests/presentation/mocks/short-urls.js';
+import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const loadShortUrlByCodeUsecase = new LoadShortUrlByCodeUsecaseStub();
@@ -34,5 +35,14 @@ describe('AccessShortUrlController', () => {
       .mockResolvedValueOnce(error);
     const output = await sut.handle({ shortCode: 'any-code' });
     expect(output).toEqual(badRequest(error));
+  });
+
+  it('Should return serverError if loadShortUrlByCodeUsecase throws', async () => {
+    const { loadShortUrlByCodeUsecase, sut } = makeSut();
+    jest
+      .spyOn(loadShortUrlByCodeUsecase, 'handle')
+      .mockImplementationOnce(mockThrow);
+    const output = await sut.handle({ shortCode: 'any-code' });
+    expect(output).toEqual(serverError());
   });
 });
