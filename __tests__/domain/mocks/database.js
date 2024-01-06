@@ -49,8 +49,8 @@ class LoadShortUrlByCodeRepositoryStub {
     shortCode: 'any-code',
     fullUrl: 'any-url',
     Clicks: 0,
-    ExpirationDate: new Date(),
-    CreatedAt: new Date(),
+    expirationDate: new Date(),
+    createdAt: new Date(),
     userId: 1,
   };
 
