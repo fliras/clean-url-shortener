@@ -36,8 +36,13 @@ class LoadShortUrlByCodeUsecaseStub {
   }
 }
 
+class IncrementShortUrlClicksUsecaseStub {
+  async handle() {}
+}
+
 export {
   GenerateShortUrlCodeUsecaseStub,
   AddShortUrlUsecaseStub,
   LoadShortUrlByCodeUsecaseStub,
+  IncrementShortUrlClicksUsecaseStub,
 };

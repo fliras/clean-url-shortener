@@ -1,6 +1,9 @@
 import AccessShortUrlController from '@/presentation/controllers/access-short-url-controller.js';
 import MissingParamError from '@/presentation/errors/missing-param-error.js';
-import { LoadShortUrlByCodeUsecaseStub } from '@/tests/presentation/mocks/short-urls.js';
+import {
+  LoadShortUrlByCodeUsecaseStub,
+  IncrementShortUrlClicksUsecaseStub,
+} from '@/tests/presentation/mocks/short-urls.js';
 import { mockThrow } from '@/tests/helpers.js';
 import {
   badRequest,
@@ -10,9 +13,15 @@ import {
 
 const makeSut = () => {
   const loadShortUrlByCodeUsecase = new LoadShortUrlByCodeUsecaseStub();
-  const sut = new AccessShortUrlController({ loadShortUrlByCodeUsecase });
+  const incrementShortUrlClicksUsecase =
+    new IncrementShortUrlClicksUsecaseStub();
+  const sut = new AccessShortUrlController({
+    loadShortUrlByCodeUsecase,
+    incrementShortUrlClicksUsecase,
+  });
   return {
     loadShortUrlByCodeUsecase,
+    incrementShortUrlClicksUsecase,
     sut,
   };
 };
@@ -48,6 +57,16 @@ describe('AccessShortUrlController', () => {
       .mockImplementationOnce(mockThrow);
     const output = await sut.handle({ shortCode: 'any-code' });
     expect(output).toEqual(serverError());
+  });
+
+  it('Should call incrementShortUrlClicksUsecase', async () => {
+    const { incrementShortUrlClicksUsecase, sut } = makeSut();
+    const incrementShortUrlSpy = jest.spyOn(
+      incrementShortUrlClicksUsecase,
+      'handle',
+    );
+    await sut.handle({ shortCode: 'any-code' });
+    expect(incrementShortUrlSpy).toHaveBeenCalled();
   });
 
   it('Should return redirect on success', async () => {
