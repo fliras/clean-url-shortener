@@ -1,10 +1,11 @@
 import AccessShortUrlController from '../../../../presentation/controllers/access-short-url-controller.js';
-import makeLoadShortUrlByCodeUsecase from '../../domain/usecases/load-short-url-by-code-usecase.js';
+import makeObtainUrlFromAValidShortUrlUsecase from '../../domain/usecases/obtain-url-from-a-valid-short-url-usecase.js';
 import makeIncrementShortUrlClicksUsecase from '../../domain/usecases/increment-short-url-clicks-usecase.js';
 
 const makeAccessShortUrlController = () => {
   return new AccessShortUrlController({
-    loadShortUrlByCodeUsecase: makeLoadShortUrlByCodeUsecase(),
+    obtainUrlFromAValidShortUrlUsecase:
+      makeObtainUrlFromAValidShortUrlUsecase(),
     incrementShortUrlClicksUsecase: makeIncrementShortUrlClicksUsecase(),
   });
 };

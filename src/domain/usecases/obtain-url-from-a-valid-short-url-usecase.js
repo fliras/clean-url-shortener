@@ -1,7 +1,7 @@
 import ShortUrlNotFoundError from '../errors/short-url-not-found-error.js';
 import ExpiredShortUrlError from '../errors/expired-short-url-error.js';
 
-export default class LoadShortUrlByCodeUsecase {
+export default class ObtainUrlFromAValidShortUrlUsecase {
   #loadShortUrlByCodeRepository;
 
   constructor({ loadShortUrlByCodeRepository }) {

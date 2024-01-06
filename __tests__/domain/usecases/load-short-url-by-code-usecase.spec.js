@@ -1,4 +1,4 @@
-import LoadShortUrlByCodeUsecase from '@/domain/usecases/load-short-url-by-code-usecase.js';
+import ObtainUrlFromAValidShortUrlUsecase from '@/domain/usecases/obtain-url-from-a-valid-short-url-usecase.js';
 import { LoadShortUrlByCodeRepositoryStub } from '@/tests/domain/mocks/database.js';
 import ShortUrlNotFoundError from '@/domain/errors/short-url-not-found-error.js';
 import ExpiredShortUrlError from '@/domain/errors/expired-short-url-error.js';
@@ -6,7 +6,9 @@ import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const loadShortUrlByCodeRepository = new LoadShortUrlByCodeRepositoryStub();
-  const sut = new LoadShortUrlByCodeUsecase({ loadShortUrlByCodeRepository });
+  const sut = new ObtainUrlFromAValidShortUrlUsecase({
+    loadShortUrlByCodeRepository,
+  });
   return {
     loadShortUrlByCodeRepository,
     sut,
@@ -26,7 +28,7 @@ const mockExpiredShortUrl = (shortUrl) => {
   };
 };
 
-describe('LoadShortUrlByCodeUsecase', () => {
+describe('ObtainUrlFromAValidShortUrlUsecase', () => {
   beforeAll(() => {
     jest.useFakeTimers('modern');
     jest.setSystemTime(MOCKED_TIMESTAMP);

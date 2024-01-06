@@ -20,7 +20,7 @@ class AddShortUrlUsecaseStub {
   }
 }
 
-class LoadShortUrlByCodeUsecaseStub {
+class ObtainUrlFromAValidShortUrlUsecaseStub {
   result = {
     shortUrlId: 1,
     shortCode: 'any-code',
@@ -43,6 +43,6 @@ class IncrementShortUrlClicksUsecaseStub {
 export {
   GenerateShortUrlCodeUsecaseStub,
   AddShortUrlUsecaseStub,
-  LoadShortUrlByCodeUsecaseStub,
+  ObtainUrlFromAValidShortUrlUsecaseStub,
   IncrementShortUrlClicksUsecaseStub,
 };
