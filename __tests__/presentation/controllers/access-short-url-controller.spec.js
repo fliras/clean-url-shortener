@@ -25,4 +25,14 @@ describe('AccessShortUrlController', () => {
     await sut.handle({ shortCode: 'any-code' });
     expect(loadShortUrlSpy).toHaveBeenCalledWith('any-code');
   });
+
+  it('Should return badRequest if loadShortUrlByCodeUsecase returns an error', async () => {
+    const { loadShortUrlByCodeUsecase, sut } = makeSut();
+    const error = new Error('any-error');
+    jest
+      .spyOn(loadShortUrlByCodeUsecase, 'handle')
+      .mockResolvedValueOnce(error);
+    const output = await sut.handle({ shortCode: 'any-code' });
+    expect(output).toEqual(badRequest(error));
+  });
 });

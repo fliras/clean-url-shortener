@@ -10,6 +10,7 @@ export default class AccessShortUrlController {
 
   async handle({ shortCode }) {
     if (!shortCode) return badRequest(new MissingParamError('shortCode'));
-    await this.#loadShortUrlByCodeUsecase.handle(shortCode);
+    const shortUrl = await this.#loadShortUrlByCodeUsecase.handle(shortCode);
+    if (shortUrl instanceof Error) return badRequest(shortUrl);
   }
 }
