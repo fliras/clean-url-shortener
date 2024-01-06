@@ -2,6 +2,7 @@ import LoadShortUrlByCodeUsecase from '@/domain/usecases/load-short-url-by-code-
 import { LoadShortUrlByCodeRepositoryStub } from '@/tests/domain/mocks/database.js';
 import ShortUrlNotFoundError from '@/domain/errors/short-url-not-found-error.js';
 import ExpiredShortUrlError from '@/domain/errors/expired-short-url-error.js';
+import { mockThrow } from '@/tests/helpers.js';
 
 const makeSut = () => {
   const loadShortUrlByCodeRepository = new LoadShortUrlByCodeRepositoryStub();
@@ -57,5 +58,14 @@ describe('LoadShortUrlByCodeUsecase', () => {
       });
     const output = await sut.handle('any-code');
     expect(output).toEqual(new ExpiredShortUrlError());
+  });
+
+  it('Should throw if loadShortUrlByCodeRepository throws', async () => {
+    const { loadShortUrlByCodeRepository, sut } = makeSut();
+    jest
+      .spyOn(loadShortUrlByCodeRepository, 'loadByCode')
+      .mockImplementationOnce(mockThrow);
+    const output = sut.handle('any-code');
+    expect(output).rejects.toThrow();
   });
 });
