@@ -21,7 +21,19 @@ class AddShortUrlUsecaseStub {
 }
 
 class LoadShortUrlByCodeUsecaseStub {
-  async handle() {}
+  result = {
+    shortUrlId: 1,
+    shortCode: 'any-code',
+    fullUrl: 'any-url',
+    clicks: 0,
+    expirationDate: new Date(),
+    createdAt: new Date(),
+    userId: 1,
+  };
+
+  async handle() {
+    return this.result;
+  }
 }
 
 export {

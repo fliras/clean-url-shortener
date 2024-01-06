@@ -1,8 +1,12 @@
 import AccessShortUrlController from '@/presentation/controllers/access-short-url-controller.js';
-import { badRequest, serverError } from '@/presentation/helpers/http.js';
 import MissingParamError from '@/presentation/errors/missing-param-error.js';
 import { LoadShortUrlByCodeUsecaseStub } from '@/tests/presentation/mocks/short-urls.js';
 import { mockThrow } from '@/tests/helpers.js';
+import {
+  badRequest,
+  serverError,
+  redirect,
+} from '@/presentation/helpers/http.js';
 
 const makeSut = () => {
   const loadShortUrlByCodeUsecase = new LoadShortUrlByCodeUsecaseStub();
@@ -44,5 +48,12 @@ describe('AccessShortUrlController', () => {
       .mockImplementationOnce(mockThrow);
     const output = await sut.handle({ shortCode: 'any-code' });
     expect(output).toEqual(serverError());
+  });
+
+  it('Should return redirect on success', async () => {
+    const { loadShortUrlByCodeUsecase, sut } = makeSut();
+    const output = await sut.handle({ shortCode: 'any-code' });
+    const expectedOutput = loadShortUrlByCodeUsecase.result.fullUrl;
+    expect(output).toEqual(redirect(expectedOutput));
   });
 });

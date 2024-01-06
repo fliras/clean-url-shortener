@@ -11,6 +11,11 @@ const created = (data) => ({
   data,
 });
 
+const redirect = (url) => ({
+  statusCode: 301,
+  data: url,
+});
+
 const badRequest = (error) => ({
   statusCode: 400,
   data: error,
@@ -26,4 +31,4 @@ const serverError = () => ({
   data: new ServerError(),
 });
 
-export { ok, created, badRequest, unauthorized, serverError };
+export { ok, created, redirect, badRequest, unauthorized, serverError };
