@@ -12,7 +12,8 @@ export default class ObtainUrlFromAValidShortUrlUsecase {
     const shortUrl =
       await this.#loadShortUrlByCodeRepository.loadByCode(shortCode);
     if (!shortUrl) return new ShortUrlNotFoundError();
-    const urlIsExpired = new Date() > shortUrl.expirationDate;
+    const { expirationDate } = shortUrl;
+    const urlIsExpired = expirationDate && new Date() > expirationDate;
     if (urlIsExpired) return new ExpiredShortUrlError();
     return shortUrl;
   }
