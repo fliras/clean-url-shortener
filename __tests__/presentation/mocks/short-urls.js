@@ -20,4 +20,12 @@ class AddShortUrlUsecaseStub {
   }
 }
 
-export { GenerateShortUrlCodeUsecaseStub, AddShortUrlUsecaseStub };
+class LoadShortUrlByCodeUsecaseStub {
+  async handle() {}
+}
+
+export {
+  GenerateShortUrlCodeUsecaseStub,
+  AddShortUrlUsecaseStub,
+  LoadShortUrlByCodeUsecaseStub,
+};
