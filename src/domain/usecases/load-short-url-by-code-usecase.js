@@ -14,5 +14,6 @@ export default class LoadShortUrlByCodeUsecase {
     if (!shortUrl) return new ShortUrlNotFoundError();
     const urlIsExpired = new Date() > shortUrl.expirationDate;
     if (urlIsExpired) return new ExpiredShortUrlError();
+    return shortUrl;
   }
 }

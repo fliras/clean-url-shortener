@@ -68,4 +68,10 @@ describe('LoadShortUrlByCodeUsecase', () => {
     const output = sut.handle('any-code');
     expect(output).rejects.toThrow();
   });
+
+  it('Should return an short url on success', async () => {
+    const { loadShortUrlByCodeRepository, sut } = makeSut();
+    const output = await sut.handle('any-code');
+    expect(output).toEqual(loadShortUrlByCodeRepository.result);
+  });
 });
