@@ -20,8 +20,10 @@ class HashComparerStub {
 }
 
 class HasherStub {
+  result = 'any-hash';
+
   async hash() {
-    return 'any-hash';
+    return this.result;
   }
 }
 

@@ -3,16 +3,19 @@ import UsernameAlreadyInUseError from '../errors/username-already-in-use-error.j
 export default class AddUserUsecase {
   #checkUserByUsernameRepository;
   #hasher;
+  #addUserRepository;
 
-  constructor({ checkUserByUsernameRepository, hasher }) {
+  constructor({ checkUserByUsernameRepository, hasher, addUserRepository }) {
     this.#checkUserByUsernameRepository = checkUserByUsernameRepository;
     this.#hasher = hasher;
+    this.#addUserRepository = addUserRepository;
   }
 
   async handle({ username, password }) {
-    const usernameAlreadyInuse =
+    const usernameAlreadyInUse =
       await this.#checkUserByUsernameRepository.checkByUsername(username);
-    if (usernameAlreadyInuse) return new UsernameAlreadyInUseError();
-    await this.#hasher.hash(password);
+    if (usernameAlreadyInUse) return new UsernameAlreadyInUseError();
+    const hashedPassword = await this.#hasher.hash(password);
+    await this.#addUserRepository.add({ username, password: hashedPassword });
   }
 }

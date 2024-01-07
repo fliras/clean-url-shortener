@@ -49,6 +49,19 @@ class CheckUserByUsernameRepositoryStub {
   }
 }
 
+class AddUserRepositoryStub {
+  result = {
+    id: 1,
+    username: 'any-username',
+    password: 'hashed-password',
+    createdAt: new Date(),
+  };
+
+  async add() {
+    return this.result;
+  }
+}
+
 class LoadShortUrlByCodeRepositoryStub {
   result = {
     shortUrlId: 1,
@@ -75,6 +88,7 @@ export {
   LoadUserByIdRepositoryStub,
   LoadUserByUsernameRepositoryStub,
   CheckUserByUsernameRepositoryStub,
+  AddUserRepositoryStub,
   LoadShortUrlByCodeRepositoryStub,
   IncrementShortUrlClicksRepositoryStub,
 };
