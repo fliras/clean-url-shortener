@@ -54,4 +54,19 @@ describe('UsersRepository', () => {
       });
     });
   });
+
+  describe('checkByUsername()', () => {
+    it('Should return true if the user exists', async () => {
+      const { sut } = makeSut();
+      const mockedUser = await mockUser();
+      const output = await sut.checkByUsername(mockedUser.username);
+      expect(output).toBe(true);
+    });
+
+    it("Should return false if the user doesn't exist", async () => {
+      const { sut } = makeSut();
+      const output = await sut.checkByUsername('any-username');
+      expect(output).toBe(false);
+    });
+  });
 });
