@@ -6,3 +6,4 @@ Acompanhe aqui a documentação referente aos endpoints da API, indicando as ent
 
 - [/users](./users.md)
 - [/short-urls](./short-urls.md)
+- [/](./raiz.md)
