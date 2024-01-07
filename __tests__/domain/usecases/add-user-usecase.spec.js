@@ -57,4 +57,11 @@ describe('AddUserUsecase', () => {
     await sut.handle(request);
     expect(hasherSpy).toHaveBeenCalledWith(request.password);
   });
+
+  it('Should throw if hasher throws', async () => {
+    const { hasher, sut } = makeSut();
+    jest.spyOn(hasher, 'hash').mockImplementationOnce(mockThrow);
+    const output = sut.handle(mockInput());
+    expect(output).rejects.toThrow();
+  });
 });
