@@ -84,4 +84,11 @@ describe('AddUserUsecase', () => {
       password: hasher.result,
     });
   });
+
+  it('Should throw if addUserRepository throws', async () => {
+    const { addUserRepository, sut } = makeSut();
+    jest.spyOn(addUserRepository, 'add').mockImplementationOnce(mockThrow);
+    const output = sut.handle(mockInput());
+    expect(output).rejects.toThrow();
+  });
 });
