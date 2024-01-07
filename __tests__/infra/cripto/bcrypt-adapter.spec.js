@@ -21,10 +21,10 @@ const makeSut = () => {
   };
 };
 
-const input = ['plain-text', 'hash'];
-
 describe('BcryptAdapter', () => {
   describe('compare()', () => {
+    const input = ['plain-text', 'hash'];
+
     it('Should call bcrypt.compare with correct values', async () => {
       const { sut } = makeSut();
       const bcryptSpy = jest.spyOn(bcrypt, 'compare');
@@ -61,6 +61,13 @@ describe('BcryptAdapter', () => {
       const bcryptSpy = jest.spyOn(bcrypt, 'hash');
       await sut.hash('any-text');
       expect(bcryptSpy).toHaveBeenCalledWith('any-text', salt);
+    });
+
+    it('Should throw if bcrypt.hash throws', async () => {
+      const { salt, sut } = makeSut();
+      jest.spyOn(bcrypt, 'hash').mockImplementationOnce(mockThrow);
+      const output = sut.hash('any-text', salt);
+      expect(output).rejects.toThrow();
     });
   });
 });
