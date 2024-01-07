@@ -1,13 +1,16 @@
 import AddUserUsecase from '@/domain/usecases/add-user-usecase.js';
-import { CheckUserByUsernameRepositoryStub } from '@/tests/domain/mocks/database.js';
 import UsernameAlreadyInUseError from '@/domain/errors/username-already-in-use-error.js';
 import { mockThrow } from '@/tests/helpers.js';
+import { CheckUserByUsernameRepositoryStub } from '@/tests/domain/mocks/database.js';
+import { HasherStub } from '@/tests/domain/mocks/cripto.js';
 
 const makeSut = () => {
   const checkUserByUsernameRepository = new CheckUserByUsernameRepositoryStub();
-  const sut = new AddUserUsecase({ checkUserByUsernameRepository });
+  const hasher = new HasherStub();
+  const sut = new AddUserUsecase({ checkUserByUsernameRepository, hasher });
   return {
     checkUserByUsernameRepository,
+    hasher,
     sut,
   };
 };
@@ -45,5 +48,13 @@ describe('AddUserUsecase', () => {
       .mockImplementationOnce(mockThrow);
     const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
+  });
+
+  it('Should call hasher with the correct values', async () => {
+    const { hasher, sut } = makeSut();
+    const hasherSpy = jest.spyOn(hasher, 'hash');
+    const request = mockInput();
+    await sut.handle(request);
+    expect(hasherSpy).toHaveBeenCalledWith(request.password);
   });
 });

@@ -19,6 +19,12 @@ class HashComparerStub {
   }
 }
 
+class HasherStub {
+  async hash() {
+    return 'any-hash';
+  }
+}
+
 class EncrypterStub {
   result = 'any-token';
   async encrypt() {
@@ -30,5 +36,6 @@ export {
   UniqueCodeGeneratorStub,
   DecrypterStub,
   HashComparerStub,
+  HasherStub,
   EncrypterStub,
 };
