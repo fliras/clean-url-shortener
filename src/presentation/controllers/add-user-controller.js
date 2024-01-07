@@ -1,4 +1,4 @@
-import { badRequest } from '../helpers/http.js';
+import { badRequest, serverError } from '../helpers/http.js';
 import MissingParamError from '../errors/missing-param-error.js';
 
 export default class AddUserController {
@@ -10,10 +10,14 @@ export default class AddUserController {
   }
 
   async handle({ username, password }) {
-    const validation = this.#validateRequest({ username, password });
-    if (validation instanceof Error) return badRequest(validation);
-    const result = await this.#addUserUsecase.handle({ username, password });
-    if (result instanceof Error) return badRequest(result);
+    try {
+      const validation = this.#validateRequest({ username, password });
+      if (validation instanceof Error) return badRequest(validation);
+      const result = await this.#addUserUsecase.handle({ username, password });
+      if (result instanceof Error) return badRequest(result);
+    } catch (error) {
+      return serverError();
+    }
   }
 
   #validateRequest(request) {
