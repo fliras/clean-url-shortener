@@ -12,7 +12,8 @@ export default class AddUserController {
   async handle({ username, password }) {
     const validation = this.#validateRequest({ username, password });
     if (validation instanceof Error) return badRequest(validation);
-    await this.#addUserUsecase.handle({ username, password });
+    const result = await this.#addUserUsecase.handle({ username, password });
+    if (result instanceof Error) return badRequest(result);
   }
 
   #validateRequest(request) {

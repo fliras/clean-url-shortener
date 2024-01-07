@@ -37,4 +37,12 @@ describe('AddUserController', () => {
     await sut.handle(request);
     expect(addUserSpy).toHaveBeenCalledWith(request);
   });
+
+  it('Should return badRequest if addUserUsecase returns an error', async () => {
+    const { addUserUsecase, sut } = makeSut();
+    const error = new Error('any-error');
+    jest.spyOn(addUserUsecase, 'handle').mockResolvedValueOnce(error);
+    const output = await sut.handle(mockRequest());
+    expect(output).toEqual(badRequest(error));
+  });
 });
