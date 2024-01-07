@@ -2,10 +2,10 @@ import { badRequest } from '../helpers/http.js';
 import MissingParamError from '../errors/missing-param-error.js';
 
 export default class AddUserController {
-  #REQUIRED_FIELDS = ['username'];
+  #REQUIRED_FIELDS = ['username', 'password'];
 
-  async handle({ username }) {
-    const validation = this.#validateRequest({ username });
+  async handle({ username, password }) {
+    const validation = this.#validateRequest({ username, password });
     if (validation instanceof Error) return badRequest(validation);
   }
 
