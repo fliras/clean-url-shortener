@@ -1,8 +1,12 @@
 import AddUserController from '@/presentation/controllers/add-user-controller.js';
-import { badRequest, serverError } from '@/presentation/helpers/http.js';
 import MissingParamError from '@/presentation/errors/missing-param-error.js';
 import { AddUserUsecaseStub } from '@/tests/presentation/mocks/users.js';
 import { mockThrow } from '@/tests/helpers.js';
+import {
+  badRequest,
+  serverError,
+  created,
+} from '@/presentation/helpers/http.js';
 
 const makeSut = () => {
   const addUserUsecase = new AddUserUsecaseStub();
@@ -52,5 +56,11 @@ describe('AddUserController', () => {
     jest.spyOn(addUserUsecase, 'handle').mockImplementationOnce(mockThrow);
     const output = await sut.handle(mockRequest());
     expect(output).toEqual(serverError());
+  });
+
+  it('Should return created on success', async () => {
+    const { addUserUsecase, sut } = makeSut();
+    const output = await sut.handle(mockRequest());
+    expect(output).toEqual(created(addUserUsecase.result));
   });
 });

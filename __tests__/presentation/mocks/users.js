@@ -15,7 +15,11 @@ class UserLoginUsecaseStub {
 }
 
 class AddUserUsecaseStub {
-  result = {};
+  result = {
+    userId: 1,
+    username: 'any-username',
+    createdAt: new Date(),
+  };
 
   async handle() {
     return this.result;
