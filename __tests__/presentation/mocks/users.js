@@ -14,4 +14,12 @@ class UserLoginUsecaseStub {
   }
 }
 
-export { LoadUserByTokenUsecaseStub, UserLoginUsecaseStub };
+class AddUserUsecaseStub {
+  result = {};
+
+  async handle() {
+    return this.result;
+  }
+}
+
+export { LoadUserByTokenUsecaseStub, UserLoginUsecaseStub, AddUserUsecaseStub };
