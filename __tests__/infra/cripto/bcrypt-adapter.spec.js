@@ -69,5 +69,11 @@ describe('BcryptAdapter', () => {
       const output = sut.hash('any-text', salt);
       expect(output).rejects.toThrow();
     });
+
+    it('Should return a hash on success', async () => {
+      const { salt, sut } = makeSut();
+      const output = await sut.hash('any-token', salt);
+      expect(output).toBe('any-hash');
+    });
   });
 });
