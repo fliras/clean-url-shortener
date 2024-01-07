@@ -1,3 +1,5 @@
+import UsernameAlreadyInUseError from '../errors/username-already-in-use-error.js';
+
 export default class AddUserUsecase {
   #checkUserByUsernameRepository;
 
@@ -6,6 +8,8 @@ export default class AddUserUsecase {
   }
 
   async handle({ username, password }) {
-    await this.#checkUserByUsernameRepository.checkByUsername(username);
+    const usernameAlreadyInuse =
+      await this.#checkUserByUsernameRepository.checkByUsername(username);
+    if (usernameAlreadyInuse) return new UsernameAlreadyInUseError();
   }
 }

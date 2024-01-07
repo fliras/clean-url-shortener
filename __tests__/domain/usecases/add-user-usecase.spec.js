@@ -1,5 +1,6 @@
 import AddUserUsecase from '@/domain/usecases/add-user-usecase.js';
 import { CheckUserByUsernameRepositoryStub } from '@/tests/domain/mocks/database.js';
+import UsernameAlreadyInUseError from '@/domain/errors/username-already-in-use-error.js';
 
 const makeSut = () => {
   const checkUserByUsernameRepository = new CheckUserByUsernameRepositoryStub();
@@ -25,5 +26,14 @@ describe('AddUserUsecase', () => {
     const request = mockInput();
     await sut.handle(request);
     expect(checkUserSpy).toHaveBeenCalledWith(request.username);
+  });
+
+  it('Should return UsernameAlreadyInUseError if checkUserByUsernameRepository returns true', async () => {
+    const { checkUserByUsernameRepository, sut } = makeSut();
+    jest
+      .spyOn(checkUserByUsernameRepository, 'checkByUsername')
+      .mockResolvedValueOnce(true);
+    const output = await sut.handle(mockInput());
+    expect(output).toEqual(new UsernameAlreadyInUseError());
   });
 });
