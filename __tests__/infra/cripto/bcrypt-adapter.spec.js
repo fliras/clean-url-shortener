@@ -12,8 +12,8 @@ jest.mock('bcrypt', () => ({
   },
 }));
 
+const salt = 10;
 const makeSut = () => {
-  const salt = 10;
   const sut = new BcryptAdapter({ salt });
   return {
     salt,
@@ -56,23 +56,25 @@ describe('BcryptAdapter', () => {
   });
 
   describe('hash()', () => {
+    const input = ['any-text', salt];
+
     it('Should call bcrypt.hash with the correct values', async () => {
-      const { salt, sut } = makeSut();
+      const { sut } = makeSut();
       const bcryptSpy = jest.spyOn(bcrypt, 'hash');
       await sut.hash('any-text');
-      expect(bcryptSpy).toHaveBeenCalledWith('any-text', salt);
+      expect(bcryptSpy).toHaveBeenCalledWith(...input);
     });
 
     it('Should throw if bcrypt.hash throws', async () => {
-      const { salt, sut } = makeSut();
+      const { sut } = makeSut();
       jest.spyOn(bcrypt, 'hash').mockImplementationOnce(mockThrow);
-      const output = sut.hash('any-text', salt);
+      const output = sut.hash(...input);
       expect(output).rejects.toThrow();
     });
 
     it('Should return a hash on success', async () => {
-      const { salt, sut } = makeSut();
-      const output = await sut.hash('any-token', salt);
+      const { sut } = makeSut();
+      const output = await sut.hash(...input);
       expect(output).toBe('any-hash');
     });
   });
