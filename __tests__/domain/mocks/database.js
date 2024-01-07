@@ -43,6 +43,12 @@ class LoadUserByUsernameRepositoryStub {
   }
 }
 
+class CheckUserByUsernameRepositoryStub {
+  async checkByUsername() {
+    return false;
+  }
+}
+
 class LoadShortUrlByCodeRepositoryStub {
   result = {
     shortUrlId: 1,
@@ -68,6 +74,7 @@ export {
   AddShortUrlRepositoryStub,
   LoadUserByIdRepositoryStub,
   LoadUserByUsernameRepositoryStub,
+  CheckUserByUsernameRepositoryStub,
   LoadShortUrlByCodeRepositoryStub,
   IncrementShortUrlClicksRepositoryStub,
 };
