@@ -16,6 +16,11 @@ export default class AddUserUsecase {
       await this.#checkUserByUsernameRepository.checkByUsername(username);
     if (usernameAlreadyInUse) return new UsernameAlreadyInUseError();
     const hashedPassword = await this.#hasher.hash(password);
-    await this.#addUserRepository.add({ username, password: hashedPassword });
+    const newUser = await this.#addUserRepository.add({
+      username,
+      password: hashedPassword,
+    });
+    delete newUser.password;
+    return newUser;
   }
 }

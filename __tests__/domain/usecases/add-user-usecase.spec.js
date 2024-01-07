@@ -91,4 +91,13 @@ describe('AddUserUsecase', () => {
     const output = sut.handle(mockInput());
     expect(output).rejects.toThrow();
   });
+
+  it('Should return an user on success', async () => {
+    const { addUserRepository, sut } = makeSut();
+    const output = await sut.handle(mockInput());
+    expect(output).toEqual({
+      ...addUserRepository.result,
+      password: undefined,
+    });
+  });
 });
