@@ -97,7 +97,10 @@ describe('ShortUrlsRepository', () => {
     it('Should increment the clicks of a short url', async () => {
       const { sut } = makeSut();
       const mockedShortUrl = await mockShortUrl();
-      const newShortUrl = await sut.incrementClicks(mockedShortUrl.short_code);
+      await sut.incrementClicks(mockedShortUrl.short_code);
+      const newShortUrl = await db('short_urls')
+        .first()
+        .where({ short_code: mockedShortUrl.short_code });
       expect(newShortUrl.clicks).toBe(mockedShortUrl.clicks + 1);
     });
   });

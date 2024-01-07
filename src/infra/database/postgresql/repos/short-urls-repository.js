@@ -13,22 +13,18 @@ export default class ShortUrlsRepository {
     return this.#map(shortUrl);
   }
 
-  async loadByCode(code) {
-    const shortUrl = await db('short_urls').first().where({ short_code: code });
-    return shortUrl && this.#map(shortUrl);
-  }
-
   async checkByCode(code) {
     const shortUrl = await this.loadByCode(code);
     return shortUrl !== undefined;
   }
 
-  async incrementClicks(code) {
-    const [shortUrl] = await db('short_urls')
-      .increment('clicks', 1)
-      .where({ short_code: code })
-      .returning('*');
+  async loadByCode(code) {
+    const shortUrl = await db('short_urls').first().where({ short_code: code });
     return shortUrl && this.#map(shortUrl);
+  }
+
+  async incrementClicks(code) {
+    await db('short_urls').increment('clicks', 1).where({ short_code: code });
   }
 
   #map(shortUrl) {
