@@ -5,13 +5,13 @@ const makeSut = () => ({
   sut: new UsersRepository(),
 });
 
+const mockAddParams = () => ({
+  username: 'user01',
+  password: 'hashed-password',
+});
+
 const mockUser = async () => {
-  const [user] = await db('users')
-    .insert({
-      username: 'user01',
-      password: 'hashed-password',
-    })
-    .returning('*');
+  const [user] = await db('users').insert(mockAddParams()).returning('*');
   return user;
 };
 
@@ -67,6 +67,20 @@ describe('UsersRepository', () => {
       const { sut } = makeSut();
       const output = await sut.checkByUsername('any-username');
       expect(output).toBe(false);
+    });
+  });
+
+  describe('add()', () => {
+    it('Should return an user on success', async () => {
+      const { sut } = makeSut();
+      const params = mockAddParams();
+      const output = await sut.add(params);
+      expect(output).toBeTruthy();
+      expect(output.userId).toBeTruthy();
+      expect(output).toMatchObject({
+        username: params.username,
+        password: params.password,
+      });
     });
   });
 });

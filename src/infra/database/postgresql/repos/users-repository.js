@@ -16,6 +16,11 @@ export default class UsersRepository {
     return user && this.#map(user);
   }
 
+  async add(user) {
+    const [newUser] = await db('users').insert(user).returning('*');
+    return this.#map(newUser);
+  }
+
   #map(user) {
     return {
       userId: user.user_id,
