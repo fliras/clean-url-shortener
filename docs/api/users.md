@@ -84,7 +84,6 @@ status: 201
 body: {
   "userId": number,
   "username": string,
-  "createdAt": string,
   "createdAt": string, // ex: "0000-00-00T00:00:00.000Z"
 }
 ```
