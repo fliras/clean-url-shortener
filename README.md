@@ -50,7 +50,20 @@ Obs:
 - o usuário e senha para acesso estão disponíveis no docker file
 ```
 
-4. Preparar o projeto:
+4. Definir as variáveis de ambiente da aplicação
+
+```
+PG_CONNECTION_STRING // string de conexão com o banco de dadoas
+API_PORT // porta da API
+JWT_SECRET // secret para geração dos tokens de autenticação
+
+ex:
+PG_CONNECTION_STRING=postgres://postgres:senha123@localhost:5432/url_shortener
+API_PORT=3000
+JWT_SECRET=s3creTjWt
+```
+
+5. Preparar o projeto:
 
 ```
 npm run config
@@ -58,13 +71,13 @@ npm run config
 obs: serão configurados o husky e as migrations do bd
 ```
 
-5. Iniciar a API (modo de desenvolvimento):
+6. Iniciar a API (modo de desenvolvimento):
 
 ```
 npm run dev
 ```
 
-6. Comandos Adicionais:
+7. Comandos Adicionais:
 
 ```
 // finaliza o container do bd
